@@ -1,14 +1,18 @@
 import java.util.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 
 class Arquivo { 
    public void criarArquivo(){
       Scanner usuario = new Scanner(System.in);
       System.out.print("Qual seu nome?");   
       String nome = usuario.nextLine();
-
-      File arquivo = new File("C:\\Users\\META-446\\Documents\\EXTRATO DATACORP\\" + nome + ".txt");
+      Path currentPath = Paths.get("");
+      Path dadosPath = currentPath.resolve("dados");
+      File arquivo = new File(dadosPath.toString() + File.separator + nome + ".txt");
+         
 
       try {
          if (arquivo.createNewFile()) {

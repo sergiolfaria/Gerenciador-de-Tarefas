@@ -19,8 +19,8 @@ public class Tarefa {
         return titulo;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setTitulo() { 
+      String titulo = lerTexto("digite um titulo");
     }
 
     public String getDescricao() {
@@ -28,7 +28,7 @@ public class Tarefa {
     }
 
     public void setDescricao(String descricao) {
-        this.descricao = descricao;
+        String Descricao = lerTexto("digite um Descricao");
     }
 
     public Date getDataCriacao() {
