@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.File;
 import java.io.IOException;
 
-class ReceberNome { 
+class Arquivo { 
    public void criarArquivo(){
       Scanner usuario = new Scanner(System.in);
       System.out.print("Qual seu nome?");   
