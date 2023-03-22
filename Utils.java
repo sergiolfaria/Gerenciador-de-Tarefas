@@ -1,18 +1,22 @@
 import java.util.*;
 public class Utils{
-   public static Int lerInteiro(perguntaInteiro){
+   
+   public static int lerInteiro(String perguntaInteiro){
       Scanner teclado = new Scanner(System.in);
-      System.out.print(perguntaInteiro);    
-      return teclado.nextLine();
-  
-  
+      imprimir(perguntaInteiro);    
+      int valorInteiro = teclado.nextInt();
+      teclado.nextLine();
+      return valorInteiro;
    }
-   public static String lerTexto(perguntaTexto){
+   
+   public static String lerTexto(String perguntaTexto){
       Scanner teclado = new Scanner(System.in);
-      System.out.print(perguntaTexto);    
+      imprimir(perguntaTexto);    
       return teclado.nextLine();
    }
-
-
+   
+   public static void imprimir(String texto){
+      System.out.print(texto);
+   }
 
 }
