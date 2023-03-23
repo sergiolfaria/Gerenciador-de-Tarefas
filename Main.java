@@ -1,14 +1,8 @@
-import java.util.*;
+import java.util.Scanner;
 
 public class Main {
    
    public static void main(String[] args) {
-      String titulo = "";
-      String descricao = "" ;
-      String status = "";
-      
-      Arquivo nome = new Arquivo();
-      nome.criarArquivo();
         Scanner scanner = new Scanner(System.in);
         GerenciadorTarefas gerenciador = new GerenciadorTarefas();
         int opcao = -1;
@@ -64,8 +58,4 @@ public class Main {
 
         scanner.close();
     }
-
 }
-
-
-   

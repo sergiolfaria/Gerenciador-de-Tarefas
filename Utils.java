@@ -6,7 +6,7 @@ public class Utils{
       Scanner teclado = new Scanner(System.in);
       imprimirTexto(perguntaInteiro);    
       int valorInteiro = teclado.nextInt();
-      teclado.nextLine();
+      teclado.nextInt();
       return valorInteiro;
    }
    
