@@ -1,9 +1,16 @@
 import java.util.*;
 
 public class Main {
+   
    public static void main(String[] args) {
-      Arquivo nome = new Arquivo ();
+      String titulo = "";
+      String descricao = "" ;
+      String status = "";
+      
+      Arquivo nome = new Arquivo();
       nome.criarArquivo();
+      Tarefa guardaTarefa = new Tarefa( titulo, descricao, status);
+      guardaTarefa.setTitulo();
 
    }
 }
