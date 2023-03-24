@@ -6,7 +6,7 @@ public class Tarefa {
     /*
     private Date dataCriacao;
     private Date dataConclusao;
-    arefa(String titulo, String descricao, Date dataCriacao, Date dataConclusao, String status)
+    Tarefa(String titulo, String descricao, Date dataCriacao, Date dataConclusao, String status)
     */
     private String status;
 
@@ -21,19 +21,21 @@ public class Tarefa {
     }
 
     public String getTitulo() {
+        String titulo = Utils.lerTexto("digite um titulo");
         return titulo;
     }
 
     public void setTitulo() { 
-      String titulo = Utils.lerTexto("digite um titulo");
+      
     }
 
     public String getDescricao() {
+        String descricao = Utils.lerTexto("digite um Descricao");
         return descricao;
     }
 
     public void setDescricao() {
-        String descricao = Utils.lerTexto("digite um Descricao");
+        
         
     }
 

@@ -1,8 +1,9 @@
 import java.util.*;
+import java.util.Date;
 
 public class Utils{
    
-   public static int lerInteiro(String perguntaInteiro){
+   public static int lerInt(String perguntaInteiro){
       Scanner teclado = new Scanner(System.in);
       imprimirTexto(perguntaInteiro);    
       int valorInteiro = teclado.nextInt();
@@ -18,6 +19,19 @@ public class Utils{
    
    public static void imprimirTexto(String texto){
       System.out.print(texto);
+   }
+   public static Date lerData(String perguntaData) {
+      Scanner teclado = new Scanner(System.in);
+      imprimirTexto(perguntaData);    
+      String dataString = teclado.nextLine();
+      Date data = null;
+      try {
+         data = new Date(dataString);
+      } catch (IllegalArgumentException e) {
+         imprimirTexto("Data inválida. Digite uma data no formato dd/mm/yyyy.\n");
+         data = lerData(perguntaData);
+      }
+      return data;
    }
 
 }

@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Date;
 
 public class Main {
    
@@ -8,47 +9,37 @@ public class Main {
         int opcao = -1;
 
         while (opcao != 0) {
-            System.out.println("==== Menu ====");
-            System.out.println("1 - Criar nova tarefa");
-            System.out.println("2 - Concluir tarefa");
-            System.out.println("3 - Exibir tarefas pendentes");
-            System.out.println("4 - Exibir tarefas concluídas");
-            System.out.println("0 - Sair");
-            System.out.print("Digite a opção desejada: ");
-            opcao = scanner.nextInt();
-            scanner.nextLine();
-
+            Utils.imprimirTexto("\n==== Menu ====\n");
+            Utils.imprimirTexto("1 - Criar nova tarefa\n");
+            Utils.imprimirTexto("2 - Concluir tarefa\n");
+            Utils.imprimirTexto("3 - Exibir tarefas pendentes\n");
+            Utils.imprimirTexto("4 - Exibir tarefas concluídas\n");
+            Utils.imprimirTexto("0 - Sair\n");
+            opcao = Utils.lerInt("Digite a opção desejada: \n");
+        
             if (opcao == 1) {
-               
-                System.out.print("Digite o título da tarefa: ");
-                String titulo = scanner.nextLine();
-                System.out.print("Digite a descrição da tarefa: ");
-                String descricao = scanner.nextLine();
-                System.out.print("Digite a data de início da tarefa (dd/mm/aaaa): ");
-                String dataInicio = scanner.nextLine();
-                Tarefa tarefa = gerenciador.criarTarefa(titulo, descricao, dataInicio);
+                String titulo = Utils.lerTexto("Digite o título da tarefa: ");
+                String descricao = Utils.lerTexto("Digite a descrição da tarefa: ");
+                Date dataInicio = Utils.Date("Digite a data de início da tarefa: ");
+                Tarefa tarefa = GerenciadorTarefas.criarTarefa(titulo, descricao, dataInicio);
                 System.out.println("Tarefa criada: " + tarefa);
             } else if (opcao == 2) {
-               
                 System.out.print("Digite o ID da tarefa que deseja concluir: ");
                 int id = scanner.nextInt();
                 scanner.nextLine(); 
-                gerenciador.concluirTarefa(id);
+                GerenciadorTarefas.concluirTarefa(id);
                 System.out.println("Tarefa concluída com sucesso!");
             } else if (opcao == 3) {
-               
                 System.out.println("Tarefas pendentes:");
-                for (Tarefa t : gerenciador.listarTarefasPendentes()) {
+                for (Tarefa t : GerenciadorTarefas.listarTarefasPendentes()) {
                     System.out.println(t);
                 }
             } else if (opcao == 4) {
-             
                 System.out.println("Tarefas concluídas:");
-                for (Tarefa t : gerenciador.listarTarefasConcluidas()) {
+                for (Tarefa t : GerenciadorTarefas.listarTarefasConcluidas()) {
                     System.out.println(t);
                 }
             } else if (opcao == 0) {
-           
                 System.out.println("Saindo do sistema...");
             } else {
                 System.out.println("Opção inválida!");
