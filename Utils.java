@@ -1,5 +1,5 @@
-import java.util.*;
 import java.util.Date;
+import java.util.Scanner;
 
 public class Utils{
    
@@ -20,6 +20,8 @@ public class Utils{
    public static void imprimirTexto(String texto){
       System.out.print(texto);
    }
+   
+   
    public static Date lerData(String perguntaData) {
       Scanner teclado = new Scanner(System.in);
       imprimirTexto(perguntaData);    

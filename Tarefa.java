@@ -1,72 +1,38 @@
 import java.util.Date;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class Tarefa {
     private String titulo;
     private String descricao;
-    /*
     private Date dataCriacao;
     private Date dataConclusao;
-    Tarefa(String titulo, String descricao, Date dataCriacao, Date dataConclusao, String status)
-    */
+    
     private String status;
 
-    public Tarefa(String titulo, String descricao, String status) {
-        this.titulo = titulo;
-        this.descricao = descricao;
-         /*
-        this.dataCriacao = dataCriacao;
-        this.dataConclusao = dataConclusao;
-        */
-        this.status = status;
-    }
+   public Tarefa(String titulo, String descricao ) {
+    this.titulo = titulo;
+    this.descricao = descricao;
+}
 
-    public String getTitulo() {
-        String titulo = Utils.lerTexto("digite um titulo");
-        return titulo;
-    }
-
-    public void setTitulo() { 
-      
-    }
-
-    public String getDescricao() {
-        String descricao = Utils.lerTexto("digite um Descricao");
-        return descricao;
-    }
-
-    public void setDescricao() {
-        
-        
-    }
-
-   /* public Date getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(Date dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
+   public String getTitulo() {
+       String titulo = Utils.lerTexto("Digite um título:");
+       return titulo;
+   }
    
-    public Date getDataConclusao() {
-        return dataConclusao;
-    }
-
-    public void setDataConclusao(Date dataConclusao) {
-        this.dataConclusao = dataConclusao;
-    }
-    
-    public void concluirTarefa(Date dataConclusao) {
-        this.dataConclusao = dataConclusao;
-        this.status = "concluída";
-    }
-   */
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
+   public String getDescricao() {
+       String descricao = Utils.lerTexto("Digite uma descrição:");
+       return descricao;
+   }
+   
+   public String getData() {
+       Date dataAtual = new Date();
+       SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+       String dataFormatada = dateFormat.format(dataAtual);
+       System.out.println("Data atual: " + dataFormatada);
+       return dataFormatada;
+   }
+   
+ 
     
 }
