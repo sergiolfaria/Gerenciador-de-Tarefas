@@ -42,4 +42,27 @@ class Arquivo {
             e.printStackTrace();
         }
     }
+    public void verArquivo(String nome) {
+    Path currentPath = Paths.get("");
+    Path dadosPath = currentPath.resolve("dados");
+
+    File arquivo = new File(dadosPath.toString() + File.separator + nome + ".txt");
+    if (!arquivo.exists()) {
+        System.out.println("O arquivo não existe.");
+        return;
+    }
+
+    try {
+        Scanner leitor = new Scanner(arquivo);
+        while (leitor.hasNextLine()) {
+            String linha = leitor.nextLine();
+            System.out.println(linha);
+        }
+        leitor.close();
+    } catch (IOException e) {
+        System.out.println("Ocorreu um erro ao ler o arquivo.");
+        e.printStackTrace();
+    }
+}
+
 }
