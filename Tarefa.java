@@ -1,38 +1,63 @@
-import java.util.Date;
-import java.util.Date;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 public class Tarefa {
+    private static int proximoId = 0;
+    private int id;
     private String titulo;
     private String descricao;
-    private Date dataCriacao;
-    private Date dataConclusao;
-    
-    private String status;
+    private LocalDate dataCriacao;
+    private LocalDate dataConclusao;
+    private boolean concluida;
 
-   public Tarefa(String titulo, String descricao ) {
-    this.titulo = titulo;
-    this.descricao = descricao;
-}
+    public Tarefa(String titulo, String descricao) {
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.dataCriacao = LocalDate.now();
+        this.concluida = false;
+        this.id = proximoId++;
+    }
 
-   public String getTitulo() {
-       String titulo = Utils.lerTexto("Digite um título:");
-       return titulo;
-   }
-   
-   public String getDescricao() {
-       String descricao = Utils.lerTexto("Digite uma descrição:");
-       return descricao;
-   }
-   
-   public String getData() {
-       Date dataAtual = new Date();
-       SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-       String dataFormatada = dateFormat.format(dataAtual);
-       System.out.println("Data atual: " + dataFormatada);
-       return dataFormatada;
-   }
-   
- 
-    
+    public int getId() {
+        return this.id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDate getDataConclusao() {
+        return dataConclusao;
+    }
+
+    public void setDataConclusao(LocalDate dataConclusao) {
+        this.dataConclusao = dataConclusao;
+    }
+
+    public boolean isConcluida() {
+        return concluida;
+    }
+
+    public void setConcluida(boolean concluida) {
+        this.concluida = concluida;
+    }
 }

@@ -17,9 +17,9 @@ public class Utils{
       return teclado.nextLine();
    }
    
-   public static void imprimirTexto(String texto){
-      System.out.print(texto);
-   }
+   public static void imprimirTexto(String texto) {
+        System.out.println(texto);
+    }
    
    
    public static Date lerData(String perguntaData) {
