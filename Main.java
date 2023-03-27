@@ -1,76 +1,87 @@
 import java.util.Scanner;
 
 public class Main {
-    private static GerenciadorTarefas gerenciador;
-    private static Scanner scanner;
-    
+
     public static void main(String[] args) {
-        gerenciador = new GerenciadorTarefas();
-        scanner = new Scanner(System.in);
-        
+        Scanner scanner = new Scanner(System.in);
+
+        // Solicita o nome do arquivo de dados ao usuário
+        System.out.print("Digite o nome do arquivo de dados: ");
+        String nomeArquivo = scanner.nextLine();
+
+        // Cria o gerenciador de tarefas a partir do nome do arquivo fornecido
+        GerenciadorTarefas gerenciador = new GerenciadorTarefas(nomeArquivo);
+
+        // Cria um scanner para a leitura das opções do usuário
+        Scanner sc = new Scanner(System.in);
+
         int opcao = 0;
-        while (opcao != 5) {
-            Utils.imprimirTexto("=== Gerenciador de Tarefas ===");
-            Utils.imprimirTexto("1 - Criar nova tarefa");
-            Utils.imprimirTexto("2 - Concluir tarefa");
-            Utils.imprimirTexto("3 - Exibir tarefas pendentes");
-            Utils.imprimirTexto("4 - Exibir tarefas concluídas");
-            Utils.imprimirTexto("5 - Sair");
-            
-            Utils.imprimirTexto("Opção: ");
-            opcao = scanner.nextInt();
-            scanner.nextLine(); // consumir a quebra de linha pendente
-            
+        do {
+            // Apresenta as opções de operação disponíveis
+            System.out.println("Escolha uma opção:");
+            System.out.println("1 - Criar nova tarefa");
+            System.out.println("2 - Concluir tarefa");
+            System.out.println("3 - Exibir tarefas pendentes");
+            System.out.println("4 - Exibir tarefas concluídas");
+            System.out.println("0 - Sair");
+
+            // Lê a opção escolhida pelo usuário
+            opcao = sc.nextInt();
+            sc.nextLine(); // consome a quebra de linha
+
             switch (opcao) {
                 case 1:
-                    Utils.imprimirTexto("\nTítulo: ");
-                    String titulo = scanner.nextLine();
-                    
-                    System.out.print("Descrição: ");
-                    String descricao = scanner.nextLine();
-                    
+                    // Solicita o título e a descrição da tarefa ao usuário
+                    System.out.println("Digite o título da tarefa:");
+                    String titulo = sc.nextLine();
+                    System.out.println("Digite a descrição da tarefa:");
+                    String descricao = sc.nextLine();
+
+                    // Cria uma nova tarefa com os dados fornecidos e a adiciona ao gerenciador
                     Tarefa tarefa = new Tarefa(titulo, descricao);
                     gerenciador.adicionarTarefa(tarefa);
-                    System.out.println("\nTarefa criada com sucesso!");
+
+                    // Informa ao usuário que a tarefa foi adicionada com sucesso
+                    System.out.println("Tarefa adicionada com sucesso!");
                     break;
-                    
                 case 2:
-                    System.out.print("\nID da tarefa: ");
-                    int id = scanner.nextInt();
-                    scanner.nextLine(); // consumir a quebra de linha pendente
-                    
-                    Tarefa t = gerenciador.getTarefa(id);
-                    if (t == null) {
-                        System.out.println("\nTarefa não encontrada!");
+                    // Solicita o título da tarefa a ser concluída ao usuário
+                    System.out.println("Digite o título da tarefa a ser concluída:");
+                    String tituloConcluir = sc.nextLine();
+
+                    // Busca a tarefa com o título fornecido no gerenciador de tarefas
+                    Tarefa tarefaAConcluir = gerenciador.buscarTarefaPorTitulo(tituloConcluir);
+                    if (tarefaAConcluir != null) {
+                        // Se a tarefa foi encontrada, a conclui e informa ao usuário
+                        gerenciador.concluirTarefa(tarefaAConcluir);
+                        System.out.println("Tarefa concluída com sucesso!");
                     } else {
-                        gerenciador.concluirTarefa(t);
-                        System.out.println("\nTarefa concluída com sucesso!");
+                        // Se a tarefa não foi encontrada, informa ao usuário
+                        System.out.println("Tarefa não encontrada.");
                     }
                     break;
-                    
                 case 3:
-                    System.out.println("\n=== Tarefas pendentes ===");
-                    for (Tarefa pendente : gerenciador.listarTarefasPendentes()) {
-                        System.out.println(pendente);
-                    }
+                    // Exibe as tarefas pendentes ao usuário
+                    gerenciador.exibirTarefasPendentes();
                     break;
-                    
                 case 4:
-                    System.out.println("\n=== Tarefas concluídas ===");
-                    for (Tarefa concluida : gerenciador.listarTarefasConcluidas()) {
-                        System.out.println(concluida);
-                    }
+                    // Exibe as tarefas concluídas ao usuário
+                    gerenciador.exibirTarefasConcluidas();
                     break;
-                    
-                case 5:
-                    System.out.println("\nSaindo...");
+                case 0:
+                    // Encerra o programa
+                    System.out.println("Saindo...");
                     break;
-                    
                 default:
-                    System.out.println("\nOpção inválida!");
+                    // Informa ao usuario que a opção é invalida
+
+                    System.out.println("Opção inválida.");
                     break;
             }
-        }
-        scanner.close();
+        //Encerra a repetição do programa
+        } while (opcao != 0);
+        
+        sc.close();
     }
+
 }

@@ -1,24 +1,26 @@
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class Tarefa {
-    private static int proximoId = 0;
-    private int id;
     private String titulo;
     private String descricao;
     private LocalDate dataCriacao;
     private LocalDate dataConclusao;
-    private boolean concluida;
+    private UUID uuid;
 
     public Tarefa(String titulo, String descricao) {
         this.titulo = titulo;
         this.descricao = descricao;
-        this.dataCriacao = LocalDate.now();
-        this.concluida = false;
-        this.id = proximoId++;
+        dataCriacao = LocalDate.now();
+        uuid = UUID.randomUUID();
     }
 
-    public int getId() {
-        return this.id;
+    public Tarefa(String titulo, String descricao, LocalDate dataCriacao, LocalDate dataConclusao, UUID uuid) {
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.dataCriacao = dataCriacao;
+        this.dataConclusao = dataConclusao;
+        this.uuid = uuid;
     }
 
     public String getTitulo() {
@@ -41,23 +43,27 @@ public class Tarefa {
         return dataCriacao;
     }
 
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
     public LocalDate getDataConclusao() {
         return dataConclusao;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     public void setDataConclusao(LocalDate dataConclusao) {
         this.dataConclusao = dataConclusao;
     }
 
-    public boolean isConcluida() {
-        return concluida;
-    }
-
-    public void setConcluida(boolean concluida) {
-        this.concluida = concluida;
+    @Override
+    public String toString() {
+        String str = "Título: " + titulo + "\n";
+        str += "Descrição: " + descricao + "\n";
+        str += "Data de criação: " + dataCriacao + "\n";
+        if (dataConclusao != null) {
+            str += "Data de conclusão: " + dataConclusao + "\n";
+        }
+        str += "UUID: " + uuid + "\n";
+        return str;
     }
 }
