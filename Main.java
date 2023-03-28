@@ -14,7 +14,7 @@ public class Main {
          System.out.println("2 - Selecionar arquivo ");
          System.out.println("0 - prosseguir");
          menu = scanner.nextInt();
-           scanner.nextLine(); // consome a quebra de linha
+         scanner.nextLine(); // consome a quebra de linha
 
          if(menu == 1){
            arquivo.criarArquivo();

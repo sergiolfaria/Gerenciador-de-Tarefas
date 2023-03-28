@@ -3,27 +3,35 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
+import java.nio.file.Files;
 
 public class Arquivo {
 
     private String nomeArquivo;
 
-    public void criarArquivo() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Digite o nome do arquivo:");
-        nomeArquivo = scanner.nextLine();
-        Path path = Paths.get("dados", nomeArquivo + ".txt");
-        File arquivo = path.toFile();
-        try {
-            if (arquivo.createNewFile()) {
-                System.out.println("Arquivo criado com sucesso.");
-            } else {
-                System.out.println("O arquivo já existe.");
-            }
-        } catch (IOException e) {
-            System.out.println("Erro ao criar arquivo.");
-        }
+   public void criarArquivo() {
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("Digite o nome do arquivo:");
+    nomeArquivo = scanner.nextLine();
+    Path diretorio = Paths.get("dados");
+    try {
+        Files.createDirectories(diretorio);
+    } catch (IOException e) {
+        System.out.println("Erro ao criar diretório.");
+        return;
     }
+    Path path = diretorio.resolve(nomeArquivo + ".txt");
+    File arquivo = path.toFile();
+    try {
+        if (arquivo.createNewFile()) {
+            System.out.println("Arquivo criado com sucesso.");
+        } else {
+            System.out.println("O arquivo já existe.");
+        }
+    } catch (IOException e) {
+        System.out.println("Erro ao criar arquivo.");
+    }
+}
    public void selecionarArquivo() {
        File diretorio = new File("dados");
        File[] arquivos = diretorio.listFiles();
