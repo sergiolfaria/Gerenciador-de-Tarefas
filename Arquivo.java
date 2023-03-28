@@ -1,79 +1,71 @@
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Scanner;
 
-class Arquivo {
+public class Arquivo {
+
+    private String nomeArquivo;
+
     public void criarArquivo() {
-        Scanner usuario = new Scanner(System.in);
-        System.out.print("Qual seu nome?");
-        String nome = usuario.nextLine();
-
-        Path currentPath = Paths.get("");
-        Path dadosPath = currentPath.resolve("dados");
-
-        File dadosDir = new File(dadosPath.toString());
-        if (!dadosDir.exists()) {
-            if (dadosDir.mkdirs()) {
-                System.out.println("Diretório criado: " + dadosDir.getAbsolutePath());
-            } else {
-                System.out.println("Não foi possível criar o diretório " + dadosDir.getAbsolutePath());
-                return;
-            }
-        }
-
-        File arquivo = new File(dadosPath.toString() + File.separator + nome + ".txt");
-
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Digite o nome do arquivo:");
+        nomeArquivo = scanner.nextLine();
+        Path path = Paths.get("dados", nomeArquivo + ".txt");
+        File arquivo = path.toFile();
         try {
             if (arquivo.createNewFile()) {
-                System.out.println("Arquivo criado: " + arquivo.getName());
-                System.out.print("Insira uma descrição para o arquivo:");
-                String descricao = usuario.nextLine();
-                ArrayList<String> lista = new ArrayList<String>();
-                lista.add(descricao);
-                FileOutputStream fos = new FileOutputStream(arquivo);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(lista);
-                oos.close();
+                System.out.println("Arquivo criado com sucesso.");
             } else {
                 System.out.println("O arquivo já existe.");
-                Scanner leitor = new Scanner(arquivo);
-                while (leitor.hasNextLine()) {
-                    String linha = leitor.nextLine();
-                    System.out.println(linha);
-                }
-                leitor.close();
             }
         } catch (IOException e) {
-            System.out.println("Ocorreu um erro ao criar o arquivo.");
-            e.printStackTrace();
+            System.out.println("Erro ao criar arquivo.");
         }
+    }
+   public void selecionarArquivo() {
+       File diretorio = new File("dados");
+       File[] arquivos = diretorio.listFiles();
+   
+       if (arquivos != null && arquivos.length > 0) {
+           System.out.println("Selecione um arquivo:");
+           int contador = 1;
+           for (File arquivo : arquivos) {
+               System.out.println(contador + "- " + arquivo.getName());
+               contador++;
+           }
+   
+           Scanner scanner = new Scanner(System.in);
+           int opcao = scanner.nextInt();
+           if (opcao >= 1 && opcao <= arquivos.length) {
+               nomeArquivo = arquivos[opcao - 1].getName();
+               System.out.println("Arquivo selecionado: " + nomeArquivo);
+           } else {
+               System.out.println("Opção inválida.");
+           }
+       } else {
+           System.out.println("Não há arquivos na pasta dados.");
+       }
+   }
+    public String getNomeArquivo() {
+        return nomeArquivo;
     }
 
     public void verArquivo(String nome) {
-        Path currentPath = Paths.get("");
-        Path dadosPath = currentPath.resolve("dados");
-
-        File arquivo = new File(dadosPath.toString() + File.separator + nome + ".txt");
-        if (!arquivo.exists()) {
-            System.out.println("O arquivo não existe.");
-            return;
-        }
-
-        try {
-            Scanner leitor = new Scanner(arquivo);
-            while (leitor.hasNextLine()) {
-                String linha = leitor.nextLine();
-                System.out.println(linha);
+        Path path = Paths.get("dados", nome + ".txt");
+        File arquivo = path.toFile();
+        if (arquivo.exists()) {
+            try (Scanner scanner = new Scanner(arquivo)) {
+                while (scanner.hasNextLine()) {
+                    System.out.println(scanner.nextLine());
+                }
+            } catch (IOException e) {
+                System.out.println("Erro ao ler arquivo.");
             }
-            leitor.close();
-        } catch (IOException e) {
-            System.out.println("Ocorreu um erro ao ler o arquivo.");
-            e.printStackTrace();
+        } else {
+            System.out.println("Arquivo não encontrado.");
         }
     }
+
 }

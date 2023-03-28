@@ -47,7 +47,7 @@ public class Tarefa {
         return dataConclusao;
     }
 
-    public UUID getUuid() {
+    public UUID getId() {
         return uuid;
     }
 
