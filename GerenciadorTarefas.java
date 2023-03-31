@@ -13,29 +13,22 @@ public class GerenciadorTarefas {
     private String nomeArquivo;
 
     public GerenciadorTarefas(String nomeUsuario) {
-        this.nomeArquivo = "dados" + File.separator + nomeUsuario + ".txt";
+        this.nomeArquivo = "dados" +File.separator + nomeUsuario;
         tarefas = new ArrayList<>();
         carregarTarefasDoArquivo();
     }
 
- 
-        public void adicionarTarefa(Tarefa tarefa) {
-    if (!tarefas.contains(tarefa)) {
-        tarefas.add(tarefa);
-        System.out.println("Tarefa adicionada com sucesso.");
-    } else {
-        System.out.println("Essa tarefa já existe na lista.");
-    }
+    public void adicionarTarefa(Tarefa tarefa) {
+       if (!tarefas.contains(tarefa)) {
+           tarefas.add(tarefa);
+           System.out.println("Tarefa adicionada com sucesso.");
+           salvarTarefas();
+       } else {
+           System.out.println("Essa tarefa já existe na lista.");
+       }
+   }
+       
 
-
-        
-        salvarTarefas();
-    }
-
-    public enum StatusTarefa {
-        PENDENTE,
-        CONCLUIDO
-    }
 
     public void concluirTarefa(Tarefa tarefa) {
         tarefa.setDataConclusao(LocalDate.now());
@@ -58,27 +51,30 @@ public class GerenciadorTarefas {
             }
         }
     }
-
-    public Tarefa selecionarTarefa() {
-        // Mostra todas as tarefas e seus números e IDs
-        for (int i = 0; i < tarefas.size(); i++) {
-            Tarefa tarefa = tarefas.get(i);
-            System.out.printf("%d. %s (ID: %s)\n", i + 1, tarefa.getTitulo(), tarefa.getId());
-        }
-
-        // Pede que o usuário selecione uma tarefa pelo número ou ID
-        int escolha = Utils.lerInt("Digite o número ou ID da tarefa desejada:");
-        if (escolha >= 1 && escolha <= tarefas.size()) {
-            return tarefas.get(escolha - 1);
-        } else {
-            for (Tarefa tarefa : tarefas) {
-                if (tarefa.getId().equals(escolha)) {
-                    return tarefa;
-                }
-            }
-            return null;
-        }
-    }
+   public Tarefa selecionarTarefa() {
+       // Recarrega as tarefas do arquivo antes de exibir a lista
+       carregarTarefasDoArquivo();
+       
+       // Mostra todas as tarefas e seus números e IDs
+       for (int i = 0; i < tarefas.size(); i++) {
+           Tarefa tarefa = tarefas.get(i);
+           System.out.printf("%d. %s (ID: %s)\n", i + 1, tarefa.getTitulo(), tarefa.getId());
+       }
+   
+       // Pede que o usuário selecione uma tarefa pelo número ou ID
+       int escolha = Utils.lerInt("Digite o número ou ID da tarefa desejada:");
+       if (escolha >= 1 && escolha <= tarefas.size()) {
+           return tarefas.get(escolha - 1);
+       } else {
+           for (Tarefa tarefa : tarefas) {
+               if (tarefa.getId().equals(escolha)) {
+                   return tarefa;
+               }
+           }
+           
+       }
+       return null;
+   }
 
     public void exibirTarefasConcluidas() {
         System.out.println("Tarefas concluídas:");
@@ -116,10 +112,16 @@ public class GerenciadorTarefas {
 }
 
 private void salvarTarefas() {
-    try (FileWriter writer = new FileWriter(nomeArquivo)) {
+    File arquivo = new File(nomeArquivo);
+    try (FileWriter writer = new FileWriter(arquivo)) {
         for (Tarefa tarefa : tarefas) {
-            String linha = tarefa.toString();
-            writer.write(linha + System.lineSeparator());
+            writer.write(tarefa.getTitulo() + ";" + tarefa.getDescricao() + ";" + tarefa.getDataCriacao() + ";");
+            if (tarefa.getDataConclusao() != null) {
+                writer.write(tarefa.getDataConclusao() + ";");
+            } else {
+                writer.write("null;");
+            }
+            writer.write(tarefa.getId() + "\n");
         }
     } catch (IOException e) {
         System.out.println("Erro ao salvar tarefas no arquivo.");

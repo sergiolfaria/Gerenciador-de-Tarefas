@@ -33,7 +33,7 @@ public class Utils{
       try {
          data = new Date(dataString);
       } catch (IllegalArgumentException e) {
-         imprimirTexto("Data inválida. Digite uma data no formato dd/mm/yyyy.\n");
+         imprimirTexto("Data inválida.\n");
          data = lerData(perguntaData);
       }
       return data;

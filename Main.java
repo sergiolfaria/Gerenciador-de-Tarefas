@@ -22,10 +22,9 @@ public class Main {
 
          }else if (menu == 2){
             arquivo.selecionarArquivo();
+            nomeArquivo = arquivo.getNomeArquivo();
+            
          }else if (menu == 0){
-            
-            
-               
             // Cria o gerenciador de tarefas a partir do nome do arquivo fornecido
             GerenciadorTarefas gerenciador = new GerenciadorTarefas(nomeArquivo);
    
@@ -56,6 +55,7 @@ public class Main {
                     // Informa ao usuário que a tarefa foi adicionada com sucesso
                     Utils.imprimirTexto("Tarefa adicionada com sucesso!");
                 } else if (opcao == 2) {
+                   nomeArquivo = arquivo.getNomeArquivo();
                    Tarefa tarefaSelecionada = gerenciador.selecionarTarefa();
                    if (tarefaSelecionada != null) {
                        gerenciador.concluirTarefa(tarefaSelecionada);
