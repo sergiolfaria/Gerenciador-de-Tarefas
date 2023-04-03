@@ -20,8 +20,7 @@ public class Arquivo {
         System.out.println("Erro ao criar diretório.");
         return;
     }
-    Path path = diretorio.resolve(nomeArquivo + ".txt");
-    File arquivo = path.toFile();
+    File arquivo = new File(diretorio + "/" + nomeArquivo + ".txt");
     try {
         if (arquivo.createNewFile()) {
             System.out.println("Arquivo criado com sucesso.");

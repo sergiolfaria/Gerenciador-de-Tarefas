@@ -13,68 +13,88 @@ public class GerenciadorTarefas {
     private String nomeArquivo;
 
     public GerenciadorTarefas(String nomeUsuario) {
-        this.nomeArquivo = "dados" +File.separator + nomeUsuario;
+        this.nomeArquivo = "dados" + File.separator + nomeUsuario;
         tarefas = new ArrayList<>();
         carregarTarefasDoArquivo();
     }
+    public void salvarTarefas() {
+    try (FileWriter writer = new FileWriter(nomeArquivo)) {
+        for (Tarefa tarefa : tarefas) {
+            String linha = tarefa.getTitulo() + ";" + tarefa.getDescricao() + ";" + tarefa.getDataCriacao() + ";" + tarefa.getDataConclusao() + ";" + tarefa.getId() + "\n";
+            writer.write(linha);
+        }
+    } catch (IOException e) {
+        System.out.println("Erro ao salvar tarefas no arquivo.");
+    }
+}
 
     public void adicionarTarefa(Tarefa tarefa) {
-       if (!tarefas.contains(tarefa)) {
-           tarefas.add(tarefa);
-           System.out.println("Tarefa adicionada com sucesso.");
-           salvarTarefas();
-       } else {
-           System.out.println("Essa tarefa já existe na lista.");
-       }
-   }
-       
-
+        if (!tarefas.contains(tarefa)) {
+            tarefas.add(tarefa);
+            salvarTarefas();
+        } else {
+            System.out.println("Essa tarefa já existe na lista.");
+        }
+    }
 
     public void concluirTarefa(Tarefa tarefa) {
         tarefa.setDataConclusao(LocalDate.now());
         salvarTarefas();
     }
-  
 
     public void exibirTarefas() {
         for (int i = 0; i < tarefas.size(); i++) {
             Tarefa tarefa = tarefas.get(i);
-            System.out.println("[" + i + "] " + tarefa.getTitulo() + " (ID: " + tarefa.getId() + ")");
+            System.out.println("[" + (i+1) + "] " + tarefa.getTitulo() + " (ID: " + tarefa.getId() + ")");
         }
     }
 
-    public void exibirTarefasPendentes() {
-        System.out.println("Tarefas pendentes:");
-        for (Tarefa tarefa : tarefas) {
-            if (tarefa.getDataConclusao() == null) {
-                System.out.println(tarefa);
-            }
-        }
-    }
-   public Tarefa selecionarTarefa() {
-       // Recarrega as tarefas do arquivo antes de exibir a lista
-       carregarTarefasDoArquivo();
-       
-       // Mostra todas as tarefas e seus números e IDs
-       for (int i = 0; i < tarefas.size(); i++) {
-           Tarefa tarefa = tarefas.get(i);
-           System.out.printf("%d. %s (ID: %s)\n", i + 1, tarefa.getTitulo(), tarefa.getId());
-       }
-   
-       // Pede que o usuário selecione uma tarefa pelo número ou ID
-       int escolha = Utils.lerInt("Digite o número ou ID da tarefa desejada:");
-       if (escolha >= 1 && escolha <= tarefas.size()) {
-           return tarefas.get(escolha - 1);
-       } else {
+          public void exibirTarefasPendentes() {
+          System.out.println("Tarefas pendentes:");
+          for (int i = 0; i < tarefas.size(); i++) {
+              Tarefa tarefa = tarefas.get(i);
+              if (tarefa.getDataConclusao() == null) {
+                  System.out.println("[" + (i+1) + "] " + tarefa.getTitulo() + " (ID: " + tarefa.getId() + ")");
+              }
+          }
+          if (tarefas.stream().noneMatch(tarefa -> tarefa.getDataConclusao() == null)) {
+              System.out.println("Não há tarefas pendentes.");
+          }
+      }    
+         public int lerInteiro(String mensagem) {
+             Scanner scanner = new Scanner(System.in);
+             System.out.print(mensagem);
+             while (!scanner.hasNextInt()) {
+                 System.out.println("Valor inválido. Digite um número inteiro.");
+                 scanner.nextLine();
+                 System.out.print(mensagem);
+             }
+             int numero = scanner.nextInt();
+             scanner.nextLine();
+             return numero;
+         }
+
+       public Tarefa selecionarTarefa() {
+           List<Tarefa> tarefasPendentes = new ArrayList<>();
            for (Tarefa tarefa : tarefas) {
-               if (tarefa.getId().equals(escolha)) {
-                   return tarefa;
+               if (tarefa.getDataConclusao() == null) {
+                   tarefasPendentes.add(tarefa);
                }
            }
-           
+           if (tarefasPendentes.isEmpty()) {
+               System.out.println("Não há tarefas pendentes.");
+               return null;
+           }
+           exibirTarefasPendentes();
+           int indice = lerInteiro("Digite o número da tarefa que deseja concluir:");
+           if (indice < 1 || indice > tarefasPendentes.size()) {
+               System.out.println("Índice inválido.");
+               return null;
+           }
+           Tarefa tarefa = tarefasPendentes.get(indice - 1);
+           tarefasPendentes.remove(tarefa);
+           return tarefa;
        }
-       return null;
-   }
 
     public void exibirTarefasConcluidas() {
         System.out.println("Tarefas concluídas:");
@@ -86,45 +106,28 @@ public class GerenciadorTarefas {
     }
 
     private void carregarTarefasDoArquivo() {
-    File arquivo = new File(nomeArquivo);
-    if (arquivo.exists()) {
-        try (Scanner scanner = new Scanner(arquivo)) {
-            while (scanner.hasNextLine()) {
-                String linha = scanner.nextLine();
-                String[] campos = linha.split(";");
-                String titulo = campos[0];
-                String descricao = campos[1];
-                LocalDate dataCriacao = LocalDate.parse(campos[2]);
-                LocalDate dataConclusao = null;
-                if (!campos[3].equals("null")) {
-                    dataConclusao = LocalDate.parse(campos[3]);
-                }
-                UUID uuid = UUID.fromString(campos[4]);
-                Tarefa tarefa = new Tarefa(titulo, descricao, dataCriacao, dataConclusao, uuid);
-                tarefas.add(tarefa);
-            }
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar tarefas do arquivo.");
-        }
-    } else {
-        System.out.println("Arquivo de tarefas não encontrado.");
-    }
-}
-
-private void salvarTarefas() {
-    File arquivo = new File(nomeArquivo);
-    try (FileWriter writer = new FileWriter(arquivo)) {
-        for (Tarefa tarefa : tarefas) {
-            writer.write(tarefa.getTitulo() + ";" + tarefa.getDescricao() + ";" + tarefa.getDataCriacao() + ";");
-            if (tarefa.getDataConclusao() != null) {
-                writer.write(tarefa.getDataConclusao() + ";");
-            } else {
-                writer.write("null;");
-            }
-            writer.write(tarefa.getId() + "\n");
-        }
-    } catch (IOException e) {
-        System.out.println("Erro ao salvar tarefas no arquivo.");
-    }
-}
+        File arquivo = new File(nomeArquivo);
+        if (arquivo.exists()) {
+            try (Scanner scanner = new Scanner(arquivo)) {
+                while (scanner.hasNextLine()) {
+                    String linha = scanner.nextLine();
+                    String[] campos = linha.split(";");
+                    String titulo = campos[0];
+                    String descricao = campos[1];
+                     LocalDate dataCriacao = LocalDate.parse(campos[2]);
+                     LocalDate dataConclusao = null;
+                     if (!campos[3].equals("null")) {
+                     dataConclusao = LocalDate.parse(campos[3]);
+                     }
+                     UUID uuid = UUID.fromString(campos[4]);
+                     Tarefa tarefa = new Tarefa(titulo, descricao, dataCriacao, dataConclusao, uuid);
+                     tarefas.add(tarefa);
+                     }
+                     } catch (IOException e) {
+                     System.out.println("Erro ao carregar tarefas do arquivo.");
+                     }
+                     } else {
+                     System.out.println("Arquivo de tarefas não encontrado.");
+      }
+   }
 }
