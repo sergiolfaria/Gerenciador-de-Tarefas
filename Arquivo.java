@@ -11,25 +11,25 @@ public class Arquivo {
 
    public void criarArquivo() {
     Scanner scanner = new Scanner(System.in);
-    System.out.println("Digite o nome do arquivo:");
+    Utils.imprimirTexto("Digite o nome do arquivo:");
     nomeArquivo = scanner.nextLine();
     Path diretorio = Paths.get("dados");
     try {
         Files.createDirectories(diretorio);
     } catch (IOException e) {
-        System.out.println("Erro ao criar diretório.");
+        Utils.imprimirTexto("Erro ao criar diretório.");
         return;
     }
     Path arquivoPath = diretorio.resolve(nomeArquivo + ".txt");
     File arquivo = arquivoPath.toFile();
     try {
         if (arquivo.createNewFile()) {
-            System.out.println("Arquivo criado com sucesso.");
+            Utils.imprimirTexto("Arquivo criado com sucesso.");
         } else {
-            System.out.println("O arquivo já existe.");
+            Utils.imprimirTexto("O arquivo já existe.");
         }
     } catch (IOException e) {
-        System.out.println("Erro ao criar arquivo.");
+        Utils.imprimirTexto("Erro ao criar arquivo.");
     }
 }
    public void selecionarArquivo() {
@@ -37,10 +37,10 @@ public class Arquivo {
        File[] arquivos = diretorio.listFiles();
    
        if (arquivos != null && arquivos.length > 0) {
-           System.out.println("Selecione um arquivo:");
+           Utils.imprimirTexto("Selecione um arquivo:");
            int contador = 1;
            for (File arquivo : arquivos) {
-               System.out.println(contador + "- " + arquivo.getName());
+               Utils.imprimirTexto(contador + "- " + arquivo.getName());
                contador++;
            }
    
@@ -48,12 +48,12 @@ public class Arquivo {
            int opcao = scanner.nextInt();
            if (opcao >= 1 && opcao <= arquivos.length) {
                nomeArquivo = arquivos[opcao - 1].getName();
-               System.out.println("Arquivo selecionado: " + nomeArquivo);
+               Utils.imprimirTexto("Arquivo selecionado: " + nomeArquivo);
            } else {
-               System.out.println("Opção inválida.");
+               Utils.imprimirTexto("Opção inválida.");
            }
        } else {
-           System.out.println("Não há arquivos na pasta dados.");
+           Utils.imprimirTexto("Não há arquivos na pasta dados.");
        }
    }
     public String getNomeArquivo() {
@@ -69,10 +69,10 @@ public class Arquivo {
                     System.out.println(scanner.nextLine());
                 }
             } catch (IOException e) {
-                System.out.println("Erro ao ler arquivo.");
+                Utils.imprimirTexto("Erro ao ler arquivo.");
             }
         } else {
-            System.out.println("Arquivo não encontrado.");
+            Utils.imprimirTexto("Arquivo não encontrado.");
         }
     }
 

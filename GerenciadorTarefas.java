@@ -26,7 +26,7 @@ public class GerenciadorTarefas {
             writer.write(linha);
          }
       } catch (IOException e) {
-         System.out.println("Erro ao salvar tarefas no arquivo.");
+         Utils.imprimirTexto("Erro ao salvar tarefas no arquivo.");
       }
    }
 
@@ -35,7 +35,7 @@ public class GerenciadorTarefas {
          tarefas.add(tarefa);
          salvarTarefas();
       } else {
-         System.out.println("Essa tarefa já existe na lista.");
+         Utils.imprimirTexto("Essa tarefa já existe na lista.");
       }
    }
 
@@ -45,7 +45,7 @@ public class GerenciadorTarefas {
     }
    
    public void exibirTarefasPendentes() {
-    System.out.println("Tarefas pendentes:");
+    Utils.imprimirTexto("Tarefas pendentes:");
     List<Tarefa> tarefasPendentes = new ArrayList<>();
     for (Tarefa tarefa : tarefas) {
         if (tarefa.getDataConclusao() == null) {
@@ -53,18 +53,13 @@ public class GerenciadorTarefas {
         }
     }
     if (tarefasPendentes.isEmpty()) {
-        System.out.println("Não há tarefas pendentes.");
+        Utils.imprimirTexto("Não há tarefas pendentes.");
     } else {
         // Ordenar tarefas pendentes por data de criação
-        Collections.sort(tarefasPendentes, new Comparator<Tarefa>() {
-            @Override
-            public int compare(Tarefa t1, Tarefa t2) {
-                return t1.getDataCriacao().compareTo(t2.getDataCriacao());
-            }
-        });
+        organizarLista(tarefasPendentes); //reordena as tarefas da lista apos a conclusao de alguma delas
         for (int i = 0; i < tarefasPendentes.size(); i++) {
             Tarefa tarefa = tarefasPendentes.get(i);
-            System.out.println("[" + (i+1) + "] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao() + " (ID: " + tarefa.getId() + ")");
+            Utils.imprimirTexto("[" + (i+1) + "] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao() + " (ID: " + tarefa.getId() + ")");
         }
     }
 }    
@@ -77,13 +72,13 @@ public class GerenciadorTarefas {
                }
            }
            if (tarefasPendentes.isEmpty()) {
-               System.out.println("Não há tarefas pendentes.");
+               Utils.imprimirTexto("Não há tarefas pendentes.");
                return null;
            }
            exibirTarefasPendentes();
            int indice = Utils.lerInt("Digite o número da tarefa que deseja concluir:");
            if (indice < 1 || indice > tarefasPendentes.size()) {
-               System.out.println("Índice inválido.");
+               Utils.imprimirTexto("Índice inválido.");
                return null;
            }
            Tarefa tarefa = tarefasPendentes.get(indice - 1);
@@ -92,7 +87,7 @@ public class GerenciadorTarefas {
        }
 
     public void exibirTarefasConcluidas() {
-        System.out.println("Tarefas concluídas:");
+        Utils.imprimirTexto("Tarefas concluídas:");
         for (Tarefa tarefa : tarefas) {
             if (tarefa.getDataConclusao() != null) {
                 System.out.println(tarefa);
@@ -119,10 +114,19 @@ public class GerenciadorTarefas {
                      tarefas.add(tarefa);
                      }
                      } catch (IOException e) {
-                     System.out.println("Erro ao carregar tarefas do arquivo.");
+                     Utils.imprimirTexto("Erro ao carregar tarefas do arquivo.");
                      }
                      } else {
-                     System.out.println("Arquivo de tarefas não encontrado.");
+                     Utils.imprimirTexto("Arquivo de tarefas não encontrado.");
       }
    }
+      public void organizarLista(List<Tarefa> lista) {
+         Collections.sort(lista, new Comparator<Tarefa>() {
+            @Override
+            public int compare(Tarefa t1, Tarefa t2) {
+               return t1.getDataCriacao().compareTo(t2.getDataCriacao());
+            }
+         });
+      }
+
 }
