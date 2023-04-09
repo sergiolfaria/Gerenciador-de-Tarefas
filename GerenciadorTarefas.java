@@ -59,7 +59,8 @@ public class GerenciadorTarefas {
         organizarLista(tarefasPendentes); //reordena as tarefas da lista apos a conclusao de alguma delas
         for (int i = 0; i < tarefasPendentes.size(); i++) {
             Tarefa tarefa = tarefasPendentes.get(i);
-            Utils.imprimirTexto("[" + (i+1) + "] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao() + " (ID: " + tarefa.getId() + ")");
+            String status = (tarefa.getDataConclusao() == null) ? "Pendente" : "Concluido em " + tarefa.getDataConclusao().toString();
+            Utils.imprimirTexto("[" + (i+1) + "] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao() + "\nStatus:" + status + " (ID: " + tarefa.getId() + ")");
         }
     }
 }    

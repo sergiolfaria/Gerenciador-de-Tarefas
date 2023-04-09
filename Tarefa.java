@@ -7,12 +7,14 @@ public class Tarefa {
     private LocalDate dataCriacao;
     private LocalDate dataConclusao;
     private UUID uuid;
+    private String status;
 
     public Tarefa(String titulo, String descricao) {
         this.titulo = titulo;
         this.descricao = descricao;
         dataCriacao = LocalDate.now();
         uuid = UUID.randomUUID();
+        status = "Pendente"; // Inicia como pendente
     }
 
     public Tarefa(String titulo, String descricao, LocalDate dataCriacao, LocalDate dataConclusao, UUID uuid) {
@@ -21,6 +23,7 @@ public class Tarefa {
         this.dataCriacao = dataCriacao;
         this.dataConclusao = dataConclusao;
         this.uuid = uuid;
+        status = dataConclusao == null ? "Pendente" : "Concluido"; // Define o status com base na dataConclusao
     }
 
     public String getTitulo() {
@@ -49,6 +52,11 @@ public class Tarefa {
 
     public void setDataConclusao(LocalDate dataConclusao) {
         this.dataConclusao = dataConclusao;
+        status = dataConclusao == null ? "Pendente" : "Concluido"; // Atualiza o status com base na nova dataConclusao
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     @Override
@@ -59,6 +67,7 @@ public class Tarefa {
         if (dataConclusao != null) {
             str += "Data de conclusão: " + dataConclusao + "\n";
         }
+        str += "Status: " + status + "\n"; // Adiciona o status à representação em string
         str += "UUID: " + uuid + "\n";
         return str;
     }
