@@ -15,7 +15,4 @@ public class Menu {
       Utils.imprimirTexto("4 - Exibir tarefas concluídas");
       Utils.imprimirTexto("0 - Sair");
    }
-   
-   
-
 }
