@@ -8,6 +8,7 @@ public class Tarefa {
     private LocalDate dataConclusao;
     private UUID uuid;
     private String status;
+    private String categoria;
 
     public Tarefa(String titulo, String descricao) {
         this.titulo = titulo;
@@ -17,12 +18,13 @@ public class Tarefa {
         status = "Pendente"; // Inicia como pendente
     }
 
-    public Tarefa(String titulo, String descricao, LocalDate dataCriacao, LocalDate dataConclusao, UUID uuid) {
+    public Tarefa(String titulo, String descricao, LocalDate dataCriacao, LocalDate dataConclusao, UUID id, String categoria)  {
         this.titulo = titulo;
         this.descricao = descricao;
         this.dataCriacao = dataCriacao;
         this.dataConclusao = dataConclusao;
         this.uuid = uuid;
+        this.categoria = categoria;
         status = dataConclusao == null ? "Pendente" : "Concluido"; // Define o status com base na dataConclusao
     }
 
@@ -31,7 +33,14 @@ public class Tarefa {
     }
 
     public String getDescricao() {
-        return descricao;
+       return descricao;
+    }
+    public String getCategoria() {
+      return categoria;
+    }     
+
+    public void setCategoria(String categoria) {
+          this.categoria = categoria;
     }
 
     public void setDescricao(String descricao) {
