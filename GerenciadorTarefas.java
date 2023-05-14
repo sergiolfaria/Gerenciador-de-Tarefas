@@ -97,31 +97,30 @@ public class GerenciadorTarefas {
    }
    
    private void carregarTarefasDoArquivo() {
-    File arquivo = new File(nomeArquivo);
-    if (arquivo.exists()) {
-        try (Scanner scanner = new Scanner(arquivo)) {
+      File arquivo = new File(nomeArquivo);
+      if (arquivo.exists()) {
+         try (Scanner scanner = new Scanner(arquivo)) {
             while (scanner.hasNextLine()) {
-                String linha = scanner.nextLine();
-                String[] campos = linha.split(";");
-                String titulo = campos[0];
-                String descricao = campos[1];
-                LocalDate dataCriacao = LocalDate.parse(campos[2]);
-                LocalDate dataConclusao = null;
-                if (!campos[3].equals("null")) {
-                    dataConclusao = LocalDate.parse(campos[3]);
-                }
-                UUID uuid = UUID.fromString(campos[4]);
-                Tarefa tarefa = new Tarefa(titulo, descricao, dataCriacao, dataConclusao, uuid, ""); // Não precisamos dos tipos de variáveis aqui
-                tarefas.add(tarefa);
+               String linha = scanner.nextLine();
+               String[] campos = linha.split(";");
+               String titulo = campos[0];
+               String descricao = campos[1];
+               LocalDate dataCriacao = LocalDate.parse(campos[2]);
+               LocalDate dataConclusao = null;
+               if (!campos[3].equals("null")) {
+                  dataConclusao = LocalDate.parse(campos[3]);
+               }
+               UUID uuid = UUID.fromString(campos[4]);
+               Tarefa tarefa = new Tarefa(titulo, descricao, dataCriacao, dataConclusao, uuid);
+               tarefas.add(tarefa);
             }
-        } catch (IOException e) {
+         } catch (IOException e) {
             Utils.imprimirTexto("Erro ao carregar tarefas do arquivo.");
-        }
-    } else {
-        Utils.imprimirTexto("Arquivo de tarefas não encontrado.");
-    }
-}
-
+         }
+      } else {
+         Utils.imprimirTexto("Arquivo de tarefas não encontrado.");
+      }
+   }
    public void organizarLista(List<Tarefa> lista) {
       Collections.sort(lista, new Comparator<Tarefa>() {
          @Override
@@ -130,45 +129,5 @@ public class GerenciadorTarefas {
          }
       });
    }
-   public List<Tarefa> buscarTarefa(String palavra) {
-       List<Tarefa> resultado = new ArrayList<>();
-       for (Tarefa tarefa : tarefas) {
-           if (tarefa.getTitulo().contains(palavra) || tarefa.getDescricao().contains(palavra) || tarefa.getCategoria().contains(palavra)) {
-               resultado.add(tarefa);
-           }
-       }
-       return resultado;
-   }
-
-   public class Autenticacao {
-    private static final String DIRETORIO = "dados";
-
-       public static String login(String nomeUsuario, String senha) {
-           File arquivo = new File(DIRETORIO, nomeUsuario);
-           if (arquivo.exists()) {
-               try (Scanner scanner = new Scanner(arquivo)) {
-                   String senhaArmazenada = scanner.nextLine().trim();
-                   if (senha.equals(senhaArmazenada)) {
-                       return nomeUsuario;
-                   } else {
-                       System.out.println("Senha incorreta.");
-                       return null;
-                   }
-               } catch (IOException e) {
-                   System.out.println("Erro ao ler arquivo do usuário.");
-                   return null;
-               }
-           } else {
-               try (FileWriter writer = new FileWriter(arquivo)) {
-                   writer.write(senha + "\n");
-                   System.out.println("Arquivo criado com sucesso.");
-                   return nomeUsuario;
-               } catch (IOException e) {
-                   System.out.println("Erro ao criar arquivo do usuário.");
-                   return null;
-               }
-           }
-       }
-   }
-
+   
 }  

@@ -1,15 +1,13 @@
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Scanner;
-import java.nio.file.Files;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 
 public class Arquivo {
-
    private String nomeArquivo;
+   private List<String> senhas = new ArrayList<>();
+   private Map<String, String> arquivoSenhaMap = new HashMap<>();
 
-   public void criarArquivo() {
+  public void criarArquivo() {
       Scanner scanner = new Scanner(System.in);
       Utils.imprimirTexto("Digite o nome do arquivo:");
       nomeArquivo = scanner.nextLine();
@@ -26,14 +24,66 @@ public class Arquivo {
       try {
          if (arquivo.createNewFile()) {
             Utils.imprimirTexto("Arquivo criado com sucesso.");
+            adicionarSenha();
          } else {
             Utils.imprimirTexto("O arquivo já existe.");
+            validarSenha(nomeArquivo);
          }
       } catch (IOException e) {
          Utils.imprimirTexto("Erro ao criar arquivo.");
       }
    }
-   public void selecionarArquivo() {
+   
+
+   public void adicionarSenha() {
+      Scanner scanner = new Scanner(System.in);
+      Utils.imprimirTexto("Digite a senha para o arquivo:");
+      String senha = scanner.nextLine();
+      arquivoSenhaMap.put(nomeArquivo, senha);
+      senhas.add(senha);
+  
+      Path path = Paths.get("dados", nomeArquivo + "_senha.txt");
+      File arquivoSenha = path.toFile();
+  
+      if (!arquivoSenha.exists()) {
+          try {
+              arquivoSenha.createNewFile();
+          } catch (IOException e) {
+              Utils.imprimirTexto("Erro ao criar arquivo de senha.");
+              return;
+          }
+      }
+  
+      try (FileWriter writer = new FileWriter(arquivoSenha, false)) {
+          writer.write(senha + "\n");
+          Utils.imprimirTexto("Senha adicionada com sucesso.");
+      } catch (IOException e) {
+          Utils.imprimirTexto("Erro ao adicionar senha ao arquivo.");
+      }
+  }
+  
+
+     public boolean validarSenha(String nomeArquivo) {
+      Scanner scanner = new Scanner(System.in);
+      boolean senhaCorreta = false;
+      
+      do {
+         Utils.imprimirTexto("Digite a senha para acessar o arquivo:");
+         String senha = scanner.nextLine();
+         
+         String senhaSalva = arquivoSenhaMap.get(nomeArquivo);
+         if (senha.equals(senhaSalva)) {
+            Utils.imprimirTexto("Senha correta.");
+            senhaCorreta = true;
+         } else {
+            Utils.imprimirTexto("Senha incorreta.");
+         }
+      } while (!senhaCorreta);
+      
+      return true;
+   }
+   
+      public void selecionarArquivo() {
       File diretorio = new File("dados");
       File[] arquivos = diretorio.listFiles();
    
@@ -61,6 +111,22 @@ public class Arquivo {
    public String getNomeArquivo() {
       return nomeArquivo;
    }
+   private void carregarSenhasDoArquivo() {
+   File arquivo = new File(nomeArquivo + "_senha.txt");
+   if (arquivo.exists()) {
+      try (Scanner scanner = new Scanner(arquivo)) {
+         while (scanner.hasNextLine()) {
+            String senha = scanner.nextLine();
+            arquivoSenhaMap.put(nomeArquivo, senha);
+         }
+      } catch (IOException e) {
+         Utils.imprimirTexto("Erro ao carregar senhas do arquivo.");
+      }
+   } else {
+      Utils.imprimirTexto("Arquivo de senhas não encontrado.");
+   }
+}
+
 
    public void verArquivo(String nome) {
       Path path = Paths.get("dados", nome + ".txt");
@@ -77,4 +143,6 @@ public class Arquivo {
          Utils.imprimirTexto("Arquivo não encontrado.");
       }
    }
-}
+  }   
+ 
+
