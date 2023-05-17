@@ -10,7 +10,6 @@ public class Tarefa {
     private String status;
     private String categoria;
 
-
     public Tarefa(String titulo, String descricao) {
         this.titulo = titulo;
         this.descricao = descricao;
@@ -25,7 +24,7 @@ public class Tarefa {
         this.dataCriacao = dataCriacao;
         this.dataConclusao = dataConclusao;
         this.uuid = uuid;
-     
+
         status = dataConclusao == null ? "Pendente" : "Concluido"; // Define o status com base na dataConclusao
     }
 
@@ -61,16 +60,14 @@ public class Tarefa {
     public String getStatus() {
         return status;
     }
-    
-   public String getCategoria() {
-      return categoria;
-   }
 
-   public void setCategoria(String categoria) {
-      this.categoria = categoria;
-   }
+    public String getCategoria() {
+        return categoria;
+    }
 
-
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
 
     @Override
     public String toString() {
