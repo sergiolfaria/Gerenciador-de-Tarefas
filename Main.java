@@ -4,7 +4,7 @@ public class Main {
 
    public static void main(String[] args) {
       Scanner scanner = new Scanner(System.in);
-      Arquivo arquivo = new Arquivo();
+      GerenciadorArquivos arquivo = new GerenciadorArquivos();
       Menu menu = new Menu();
       String nomeArquivo = "";
 
