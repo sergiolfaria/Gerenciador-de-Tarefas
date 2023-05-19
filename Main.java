@@ -30,7 +30,7 @@ public class Main {
             // Cria uma nova tarefa com os dados fornecidos e a adiciona ao gerenciador
             Tarefa tarefa = new Tarefa(titulo, descricao);
             gerenciador.adicionarTarefa(tarefa);
-
+      
             // Informa ao usuário que a tarefa foi adicionada com sucesso
             Utils.imprimirTexto("Tarefa adicionada com sucesso!");
 

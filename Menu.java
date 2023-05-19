@@ -1,12 +1,5 @@
 public class Menu {
    
-   public void exibirMenuArquivos() {
-      Utils.imprimirTexto("Escolha uma opção:");
-      Utils.imprimirTexto("1 - Criar um novo arquivo");
-      Utils.imprimirTexto("2 - Selecionar arquivo ");
-      Utils.imprimirTexto("0 - prosseguir");
-   }
-   
    public void exibirMenuTarefas(){
       Utils.imprimirTexto("Escolha uma opção:");
       Utils.imprimirTexto("1 - Criar nova tarefa");

@@ -23,13 +23,39 @@ public class GerenciadorTarefas {
       try (FileWriter writer = new FileWriter(nomeArquivo)) {
          for (Tarefa tarefa : tarefas) {
             String linha = tarefa.getTitulo() + ";" + tarefa.getDescricao() + ";" + tarefa.getDataCriacao() + ";"
-                  + tarefa.getDataConclusao() + ";" + tarefa.getId() + "\n";
+                  + tarefa.getDataConclusao() + ";" + tarefa.getId() + ";" + tarefa.getCategoria() + "\n"; // adicione a categoria aqui
             writer.write(linha);
          }
       } catch (IOException e) {
          Utils.imprimirTexto("Erro ao salvar tarefas no arquivo.");
       }
    }
+   public void salvarCategoria(Tarefa tarefa, String novaCategoria) {
+      // Verifique se a tarefa já existe na lista
+      boolean tarefaExiste = false;
+      for (Tarefa t : tarefas) {
+         if (t.equals(tarefa)) {
+            tarefaExiste = true;
+            break;
+         }
+      }
+   
+      // Se a tarefa não existir, adicione-a à lista
+      if (!tarefaExiste) {
+         tarefa.setCategoria(novaCategoria);
+         tarefas.add(tarefa);
+         Utils.imprimirTexto("A tarefa foi adicionada com a nova categoria.");
+      }
+      // Se a tarefa existir, atualize a categoria
+      else {
+         tarefa.setCategoria(novaCategoria);
+         Utils.imprimirTexto("A categoria da tarefa foi atualizada.");
+      }
+      
+      // Salve todas as tarefas no arquivo
+      salvarTarefas();
+   }
+
 
    public void adicionarTarefa(Tarefa tarefa) {
       if (!tarefas.contains(tarefa)) {
@@ -115,7 +141,8 @@ public class GerenciadorTarefas {
                   dataConclusao = LocalDate.parse(campos[3]);
                }
                UUID uuid = UUID.fromString(campos[4]);
-               Tarefa tarefa = new Tarefa(titulo, descricao, dataCriacao, dataConclusao, uuid);
+               String categoria = campos[5]; // adicione a categoria aqui
+               Tarefa tarefa = new Tarefa(titulo, descricao, dataCriacao, dataConclusao, uuid, categoria);
                tarefas.add(tarefa);
             }
          } catch (IOException e) {
@@ -125,7 +152,7 @@ public class GerenciadorTarefas {
          Utils.imprimirTexto("Arquivo de tarefas não encontrado.");
       }
    }
-
+   
    public void organizarTarefasPorDataCriacao(List<Tarefa> lista) {
       Collections.sort(lista, new Comparator<Tarefa>() {
          @Override
