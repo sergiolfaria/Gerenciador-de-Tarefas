@@ -16,9 +16,10 @@ public class Tarefa {
         dataCriacao = LocalDate.now();
         uuid = UUID.randomUUID();
         status = "Pendente"; // Inicia como pendente
+        categoria = null;
     }
 
-    public Tarefa(String titulo, String descricao, LocalDate dataCriacao, LocalDate dataConclusao, UUID uuid, categoria) {
+    public Tarefa(String titulo, String descricao, LocalDate dataCriacao, LocalDate dataConclusao, UUID uuid, String categoria) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.dataCriacao = dataCriacao;

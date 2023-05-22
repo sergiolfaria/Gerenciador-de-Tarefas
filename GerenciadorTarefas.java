@@ -27,7 +27,7 @@ public class GerenciadorTarefas {
             writer.write(linha);
          }
       } catch (IOException e) {
-         Utils.imprimirTexto("Erro ao salvar tarefas no arquivo.");
+         Utils.imprimirTexto("\nErro ao salvar tarefas no arquivo.");
       }
    }
    public void salvarCategoria(Tarefa tarefa, String novaCategoria) {
@@ -44,12 +44,12 @@ public class GerenciadorTarefas {
       if (!tarefaExiste) {
          tarefa.setCategoria(novaCategoria);
          tarefas.add(tarefa);
-         Utils.imprimirTexto("A tarefa foi adicionada com a nova categoria.");
+         Utils.imprimirTexto("\nA tarefa foi adicionada com a nova categoria.");
       }
       // Se a tarefa existir, atualize a categoria
       else {
          tarefa.setCategoria(novaCategoria);
-         Utils.imprimirTexto("A categoria da tarefa foi atualizada.");
+         Utils.imprimirTexto("\nA categoria da tarefa foi atualizada.");
       }
       
       // Salve todas as tarefas no arquivo
@@ -62,7 +62,7 @@ public class GerenciadorTarefas {
          tarefas.add(tarefa);
          salvarTarefas();
       } else {
-         Utils.imprimirTexto("Essa tarefa já existe na lista.");
+         Utils.imprimirTexto("\nEssa tarefa já existe na lista.");
       }
    }
 
@@ -72,7 +72,7 @@ public class GerenciadorTarefas {
    }
 
    public void exibirTarefasPendentes() {
-      Utils.imprimirTexto("Tarefas pendentes:");
+      Utils.imprimirTexto("\nTarefas pendentes:");
       List<Tarefa> tarefasPendentes = new ArrayList<>();
       for (Tarefa tarefa : tarefas) {
          if (tarefa.getDataConclusao() == null) {
@@ -80,7 +80,7 @@ public class GerenciadorTarefas {
          }
       }
       if (tarefasPendentes.isEmpty()) {
-         Utils.imprimirTexto("Não há tarefas pendentes.");
+         Utils.imprimirTexto("\nNão há tarefas pendentes.");
       } else {
          // Ordenar tarefas pendentes por data de criação
          organizarTarefasPorDataCriacao(tarefasPendentes); // reordena as tarefas da lista apos a conclusao de alguma
@@ -103,11 +103,11 @@ public class GerenciadorTarefas {
          }
       }
       if (tarefasPendentes.isEmpty()) {
-         Utils.imprimirTexto("Não há tarefas pendentes.");
+         Utils.imprimirTexto("\nNão há tarefas pendentes.");
          return null;
       }
       exibirTarefasPendentes();
-      int indice = Utils.lerInt("Digite o número da tarefa que deseja concluir:");
+      int indice = Utils.lerInt("\nDigite o número da tarefa que deseja concluir:");
       if (indice < 1 || indice > tarefasPendentes.size()) {
          Utils.imprimirTexto("Índice inválido.");
          return null;
@@ -118,7 +118,7 @@ public class GerenciadorTarefas {
    }
 
    public void exibirTarefasConcluidas() {
-      Utils.imprimirTexto("Tarefas concluídas:");
+      Utils.imprimirTexto("\nTarefas concluídas:");
       for (Tarefa tarefa : tarefas) {
          if (tarefa.getDataConclusao() != null) {
             System.out.println(tarefa);
@@ -146,10 +146,10 @@ public class GerenciadorTarefas {
                tarefas.add(tarefa);
             }
          } catch (IOException e) {
-            Utils.imprimirTexto("Erro ao carregar tarefas do arquivo.");
+            Utils.imprimirTexto("\nErro ao carregar tarefas do arquivo.");
          }
       } else {
-         Utils.imprimirTexto("Arquivo de tarefas não encontrado.");
+         Utils.imprimirTexto("\nArquivo de tarefas não encontrado.");
       }
    }
    
@@ -161,5 +161,17 @@ public class GerenciadorTarefas {
          }
       });
    }
-
+   public void filtrarTarefasPorCategoria(String categoria) {
+      Utils.imprimirTexto("\nTarefas na categoria '" + categoria + "':");
+      boolean encontrouTarefaNaCategoria = false;
+      for (Tarefa tarefa : tarefas) {
+         if (tarefa.getCategoria() != null && tarefa.getCategoria().equals(categoria)) {
+            System.out.println(tarefa);
+            encontrouTarefaNaCategoria = true;
+         }
+      }
+      if (!encontrouTarefaNaCategoria) {
+         Utils.imprimirTexto("\nNão há tarefas nessa categoria.");
+      }
+   }
 }

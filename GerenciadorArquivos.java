@@ -8,33 +8,33 @@ public class GerenciadorArquivos {
    private Scanner scanner = new Scanner(System.in);
 
    public void criarArquivo() {
-      Utils.imprimirTexto("Digite o nome do arquivo:");
+      Utils.imprimirTexto("\nDigite o nome de Usuario:");
       nomeArquivo = scanner.nextLine();
       Path diretorio = Paths.get("dados");
 
       try {
          Files.createDirectories(diretorio);
       } catch (IOException e) {
-         Utils.imprimirTexto("Erro ao criar diretório.");
+         Utils.imprimirTexto("\nErro ao criar diretório.");
          return;
       }
       Path arquivoPath = diretorio.resolve(nomeArquivo + ".txt");
       File arquivo = arquivoPath.toFile();
       try {
          if (arquivo.createNewFile()) {
-            Utils.imprimirTexto("Arquivo criado com sucesso.");
+            Utils.imprimirTexto("\nArquivo criado com sucesso.");
             adicionarSenha();
          } else {
-            Utils.imprimirTexto("O arquivo já existe.");
+            Utils.imprimirTexto("\nO arquivo já existe.");
             validarSenha(nomeArquivo);
          }
       } catch (IOException e) {
-         Utils.imprimirTexto("Erro ao criar arquivo.");
+         Utils.imprimirTexto("\nErro ao criar arquivo.");
       }
    }
 
    public void adicionarSenha() {
-      Utils.imprimirTexto("Digite a senha para o arquivo:");
+      Utils.imprimirTexto("\nDigite a senha para o arquivo:");
       String senha = scanner.nextLine();
       arquivoSenhaMap.put(nomeArquivo, senha);
 
@@ -45,16 +45,16 @@ public class GerenciadorArquivos {
          try {
             arquivoSenha.createNewFile();
          } catch (IOException e) {
-            Utils.imprimirTexto("Erro ao criar arquivo de senha.");
+            Utils.imprimirTexto("\nErro ao criar arquivo de senha.");
             return;
          }
       }
 
       try (FileWriter writer = new FileWriter(arquivoSenha, false)) {
          writer.write(senha + "\n");
-         Utils.imprimirTexto("Senha adicionada com sucesso.");
+         Utils.imprimirTexto("\nSenha adicionada com sucesso.");
       } catch (IOException e) {
-         Utils.imprimirTexto("Erro ao adicionar senha ao arquivo.");
+         Utils.imprimirTexto("\nErro ao adicionar senha ao arquivo.");
       }
    }
 
@@ -63,15 +63,15 @@ public class GerenciadorArquivos {
       carregarSenhasDoArquivo();
 
       do {
-         Utils.imprimirTexto("Digite a senha para acessar o arquivo:");
+         Utils.imprimirTexto("\nDigite a senha para acessar o arquivo:");
          String senha = scanner.nextLine();
 
          String senhaSalva = arquivoSenhaMap.get(nomeArquivo);
          if (senha.equals(senhaSalva)) {
-            Utils.imprimirTexto("Senha correta.");
+            Utils.imprimirTexto("\nSenha correta.");
             senhaCorreta = true;
          } else {
-            Utils.imprimirTexto("Senha incorreta.");
+            Utils.imprimirTexto("\nSenha incorreta.");
          }
       } while (!senhaCorreta);
 
@@ -91,11 +91,11 @@ public class GerenciadorArquivos {
                   arquivoSenhaMap.put(nomeArquivo, senha);
                }
             } catch (IOException e) {
-               Utils.imprimirTexto("Erro ao carregar senhas do arquivo.");
+               Utils.imprimirTexto("\nErro ao carregar senhas do arquivo.");
             }
          }
       } else {
-         Utils.imprimirTexto("Nenhum arquivo de senhas encontrado.");
+         Utils.imprimirTexto("\nNenhum arquivo de senhas encontrado.");
       }
    }
 
@@ -104,7 +104,7 @@ public class GerenciadorArquivos {
       File[] arquivos = diretorio.listFiles();
 
       if (arquivos != null && arquivos.length > 0) {
-         Utils.imprimirTexto("Selecione um arquivo:");
+         Utils.imprimirTexto("\nSelecione um arquivo:");
          int contador = 1;
          for (File arquivo : arquivos) {
             Utils.imprimirTexto(contador + "- " + arquivo.getName());
@@ -116,14 +116,14 @@ public class GerenciadorArquivos {
             try {
                opcao = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-               Utils.imprimirTexto("Entrada inválida. Por favor, insira um número.");
+               Utils.imprimirTexto("\nEntrada inválida. Por favor, insira um número.");
             }
          } while (opcao < 1 || opcao > arquivos.length);
 
          nomeArquivo = arquivos[opcao - 1].getName().replace(".txt", "");
          Utils.imprimirTexto("Arquivo selecionado: " + nomeArquivo);
       } else {
-         Utils.imprimirTexto("Não há arquivos na pasta dados.");
+         Utils.imprimirTexto("\nNão há arquivos na pasta dados.");
       }
    }
 
@@ -140,10 +140,10 @@ public class GerenciadorArquivos {
                System.out.println(scanner.nextLine());
             }
          } catch (IOException e) {
-            Utils.imprimirTexto("Erro ao ler arquivo.");
+            Utils.imprimirTexto("\nErro ao ler arquivo.");
          }
       } else {
-         Utils.imprimirTexto("Arquivo não encontrado.");
+         Utils.imprimirTexto("\nArquivo não encontrado.");
       }
    }
 }
