@@ -1,4 +1,6 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Tarefa {
@@ -9,6 +11,7 @@ public class Tarefa {
     private UUID uuid;
     private String status;
     private String categoria;
+    private List<Tarefa> subtarefas;
 
     public Tarefa(String titulo, String descricao) {
         this.titulo = titulo;
@@ -17,6 +20,7 @@ public class Tarefa {
         uuid = UUID.randomUUID();
         status = "Pendente"; // Inicia como pendente
         categoria = null;
+        subtarefas = new ArrayList<>();
     }
 
     public Tarefa(String titulo, String descricao, LocalDate dataCriacao, LocalDate dataConclusao, UUID uuid, String categoria) {
@@ -26,6 +30,7 @@ public class Tarefa {
         this.dataConclusao = dataConclusao;
         this.uuid = uuid;
         this.categoria = categoria;
+        subtarefas = new ArrayList<>();
 
         status = dataConclusao == null ? "Pendente" : "Concluido"; // Define o status com base na dataConclusao
     }
@@ -37,14 +42,14 @@ public class Tarefa {
     public String getDescricao() {
         return descricao;
     }
+
     public String getCategoria() {
-      return categoria;
-   }
+        return categoria;
+    }
 
-   public void setCategoria(String categoria) {
-      this.categoria = categoria;
-   }
-
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
@@ -71,7 +76,13 @@ public class Tarefa {
         return status;
     }
 
-   
+    public void adicionarSubtarefa(Tarefa subtarefa) {
+        subtarefas.add(subtarefa);
+    }
+
+    public List<Tarefa> getSubtarefas() {
+        return subtarefas;
+    }
 
     @Override
     public String toString() {
