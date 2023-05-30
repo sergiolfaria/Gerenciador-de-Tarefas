@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.List;
 
 public class Main {
 
@@ -77,10 +78,25 @@ public class Main {
                 String categoria = Utils.lerTexto("Digite a categoria:");
                 // Filtra as tarefas pela categoria fornecida
                 gerenciador.filtrarTarefasPorCategoria(categoria);
-            } else if (opcaoTarefa == 0) {
+            }else if (opcaoTarefa == 6) {
+                // Solicita a palavra a ser buscada
+                String palavra = Utils.lerTexto("Digite a palavra a ser buscada:");
+                // Busca a palavra nos arquivos TXT
+                List<String> ocorrencias = gerenciador.buscarPalavra(palavra);
+
+                // Exibe as ocorrências encontradas
+                if (ocorrencias.isEmpty()) {
+                    Utils.imprimirTexto("\nA palavra não foi encontrada nos arquivos TXT.");
+                } else {
+                    Utils.imprimirTexto("\nOcorrências encontradas:");
+                    for (String ocorrencia : ocorrencias) {
+                        Utils.imprimirTexto(ocorrencia);
+                    }
+                }
+            }else if (opcaoTarefa == 0) {
                 // Encerra o programa
                 Utils.imprimirTexto("\nSaindo...");
-            } else {
+            }else {
                 // Informa ao usuário que a opção é inválida
                 Utils.imprimirTexto("\nOpção inválida.");
             }

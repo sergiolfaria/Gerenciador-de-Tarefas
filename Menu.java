@@ -7,6 +7,8 @@ public class Menu {
       Utils.imprimirTexto("3 - Exibir tarefas pendentes");
       Utils.imprimirTexto("4 - Exibir tarefas concluídas");
       Utils.imprimirTexto("5 - Filtrar tarefas por categoria");
+      Utils.imprimirTexto("6 - Digite a palavra que deseja buscar");
       Utils.imprimirTexto("0 - Sair\n");
+      
    }
 }

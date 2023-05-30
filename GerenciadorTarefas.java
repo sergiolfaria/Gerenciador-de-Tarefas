@@ -195,5 +195,27 @@ public class GerenciadorTarefas {
     salvarTarefas();
    }
    
+   public List<String> buscarPalavra(String palavra) {
+    List<String> ocorrencias = new ArrayList<>();
+    buscarPalavraRecursivo(palavra, tarefas, ocorrencias);
+    return ocorrencias;
+}
 
+private void buscarPalavraRecursivo(String palavra, List<Tarefa> tarefas, List<String> ocorrencias) {
+    for (Tarefa tarefa : tarefas) {
+        String titulo = tarefa.getTitulo();
+        String descricao = tarefa.getDescricao();
+        
+        if (titulo.contains(palavra)) {
+            ocorrencias.add("Título da tarefa: " + titulo);
+        }
+        
+        if (descricao.contains(palavra)) {
+            ocorrencias.add("Descrição da tarefa: " + descricao);
+        }
+        
+        List<Tarefa> subtarefas = tarefa.getSubtarefas();
+        buscarPalavraRecursivo(palavra, subtarefas, ocorrencias);
+    }
+  }
 }
