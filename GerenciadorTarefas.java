@@ -99,7 +99,7 @@ public class GerenciadorTarefas {
               String status = (tarefa.getDataConclusao() == null) ? "Pendente"
                       : "Concluído em " + tarefa.getDataConclusao().toString();
               if (tarefa.getIdTarefaPai() == null) {
-                  Utils.imprimirTexto("[Tarefa] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao()
+                  Utils.imprimirTexto("[" + (i + 1) + "] [Tarefa] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao()
                           + "\nStatus: " + status + " (ID: " + tarefa.getId() + ")");
               } else {
                   Utils.imprimirTexto("   [Subtarefa] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao()
@@ -133,21 +133,36 @@ public class GerenciadorTarefas {
       return tarefa;
    }
 
-   public void exibirTarefasConcluidas() {
-      Utils.imprimirTexto("\nTarefas concluídas:");
-      for (Tarefa tarefa : tarefas) {
-         if (tarefa.getDataConclusao() != null) {
-            System.out.println(tarefa);
-         }
+ public void exibirTarefasConcluidas() {
+   Utils.imprimirTexto("\nTarefas concluídas:");
+   for (Tarefa tarefa : tarefas) {
+      if (tarefa.getDataConclusao() != null) {
+         exibirTarefaESubtarefas(tarefa, 0);
       }
    }
+}
 
-   private void carregarTarefasDoArquivo() {
-      File arquivo = new File(nomeArquivo);
-      if (arquivo.exists()) {
-         try (Scanner scanner = new Scanner(arquivo)) {
-            while (scanner.hasNextLine()) {
-               String linha = scanner.nextLine();
+private void exibirTarefaESubtarefas(Tarefa tarefa, int nivel) {
+   String identacao = "   ".repeat(nivel);
+   String status = (tarefa.getDataConclusao() != null) ? "Concluído em " + tarefa.getDataConclusao().toString() : "Pendente";
+   Utils.imprimirTexto(identacao + "[Tarefa] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao());
+   Utils.imprimirTexto(identacao + "Status: " + status + " (ID: " + tarefa.getId() + ")");
+   List<Tarefa> subtarefas = tarefa.getSubtarefas();
+   for (Tarefa subtarefa : subtarefas) {
+      exibirTarefaESubtarefas(subtarefa, nivel + 1);
+   }
+}
+
+
+
+  private void carregarTarefasDoArquivo() {
+   File arquivo = new File(nomeArquivo);
+   if (arquivo.exists()) {
+      try (Scanner scanner = new Scanner(arquivo)) {
+         while (scanner.hasNextLine()) {
+            String linha = scanner.nextLine();
+            if (linha.startsWith("SUBTAREFA:")) {
+               linha = linha.substring(10); // Remover o prefixo "SUBTAREFA:"
                String[] campos = linha.split(";");
                String titulo = campos[0];
                String descricao = campos[1];
@@ -157,18 +172,33 @@ public class GerenciadorTarefas {
                   dataConclusao = LocalDate.parse(campos[3]);
                }
                UUID uuid = UUID.fromString(campos[4]);
-               String categoria = campos[5]; // adicione a categoria aqui
+               String categoria = campos[5];
+               UUID idTarefaPai = UUID.fromString(campos[6]);
+               Tarefa subtarefa = new Tarefa(titulo, descricao, dataCriacao, dataConclusao, uuid, categoria);
+               subtarefa.setIdTarefaPai(idTarefaPai);
+               adicionarSubtarefa(subtarefa); // Método para adicionar subtarefa à tarefa pai
+            } else {
+               String[] campos = linha.split(";");
+               String titulo = campos[0];
+               String descricao = campos[1];
+               LocalDate dataCriacao = LocalDate.parse(campos[2]);
+               LocalDate dataConclusao = null;
+               if (!campos[3].equals("null")) {
+                  dataConclusao = LocalDate.parse(campos[3]);
+               }
+               UUID uuid = UUID.fromString(campos[4]);
+               String categoria = campos[5];
                Tarefa tarefa = new Tarefa(titulo, descricao, dataCriacao, dataConclusao, uuid, categoria);
                tarefas.add(tarefa);
             }
-         } catch (IOException e) {
-            Utils.imprimirTexto("\nErro ao carregar tarefas do arquivo.");
          }
-      } else {
-         Utils.imprimirTexto("\nArquivo de tarefas não encontrado.");
+      } catch (IOException e) {
+         Utils.imprimirTexto("\nErro ao carregar tarefas do arquivo.");
       }
+   } else {
+      Utils.imprimirTexto("\nArquivo de tarefas não encontrado.");
    }
-   
+}
    public void organizarTarefasPorDataCriacao(List<Tarefa> lista) {
       Collections.sort(lista, new Comparator<Tarefa>() {
          @Override
@@ -190,12 +220,18 @@ public class GerenciadorTarefas {
          Utils.imprimirTexto("\nNão há tarefas nessa categoria.");
       }
    }
-   public void adicionarSubtarefa(Tarefa subtarefa) {
-    subtarefa.setIdTarefaPai(subtarefa.getId()); // Define o ID da tarefa pai na subtarefa
-    if (!subtarefa.getSubtarefas().contains(subtarefa)) {
-        subtarefa.getSubtarefas().add(subtarefa);
-    }
+  public void adicionarSubtarefa(Tarefa subtarefa) {
+   UUID idTarefaPai = subtarefa.getIdTarefaPai();
+   for (Tarefa tarefa : tarefas) {
+      if (tarefa.getId().equals(idTarefaPai)) {
+         tarefa.getSubtarefas().add(subtarefa);
+         salvarTarefas();
+         return;
+      }
+   }
+   Utils.imprimirTexto("\nErro ao adicionar subtarefa: tarefa pai não encontrada.");
 }
+
 
 
    public void exibirSubtarefas(Tarefa tarefa) {
