@@ -12,6 +12,7 @@ public class Tarefa {
     private String status;
     private String categoria;
     private List<Tarefa> subtarefas;
+    private UUID idTarefaPai; // ID da tarefa pai
 
     public Tarefa(String titulo, String descricao) {
         this.titulo = titulo;
@@ -77,11 +78,22 @@ public class Tarefa {
     }
 
     public void adicionarSubtarefa(Tarefa subtarefa) {
-        subtarefas.add(subtarefa);
+        subtarefa.setIdTarefaPai(this.uuid); // Define o ID da tarefa pai na subtarefa
+        if (!subtarefas.contains(subtarefa)) {
+            subtarefas.add(subtarefa);
+        }
     }
 
     public List<Tarefa> getSubtarefas() {
         return subtarefas;
+    }
+
+    public UUID getIdTarefaPai() {
+        return idTarefaPai;
+    }
+
+    public void setIdTarefaPai(UUID idTarefaPai) {
+        this.idTarefaPai = idTarefaPai;
     }
 
     @Override

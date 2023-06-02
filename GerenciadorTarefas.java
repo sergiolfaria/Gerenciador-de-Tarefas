@@ -20,16 +20,26 @@ public class GerenciadorTarefas {
    }
 
    public void salvarTarefas() {
-      try (FileWriter writer = new FileWriter(nomeArquivo)) {
-         for (Tarefa tarefa : tarefas) {
-            String linha = tarefa.getTitulo() + ";" + tarefa.getDescricao() + ";" + tarefa.getDataCriacao() + ";"
-                  + tarefa.getDataConclusao() + ";" + tarefa.getId() + ";" + tarefa.getCategoria() + "\n"; // adicione a categoria aqui
-            writer.write(linha);
+   try (FileWriter writer = new FileWriter(nomeArquivo)) {
+      for (Tarefa tarefa : tarefas) {
+         String linha = tarefa.getTitulo() + ";" + tarefa.getDescricao() + ";" + tarefa.getDataCriacao() + ";"
+               + tarefa.getDataConclusao() + ";" + tarefa.getId() + ";" + tarefa.getCategoria() + "\n";
+         writer.write(linha);
+
+         for (Tarefa subtarefa : tarefa.getSubtarefas()) {
+            String linhaSubtarefa = "SUBTAREFA:" + subtarefa.getTitulo() + ";" + subtarefa.getDescricao() + ";"
+                  + subtarefa.getDataCriacao() + ";" + subtarefa.getDataConclusao() + ";" + subtarefa.getId()
+                  + ";" + subtarefa.getCategoria() + ";" + subtarefa.getIdTarefaPai() + "\n";
+            writer.write(linhaSubtarefa);
          }
-      } catch (IOException e) {
-         Utils.imprimirTexto("\nErro ao salvar tarefas no arquivo.");
       }
+   } catch (IOException e) {
+      Utils.imprimirTexto("\nErro ao salvar tarefas no arquivo.");
    }
+}
+
+
+
    public void salvarCategoria(Tarefa tarefa, String novaCategoria) {
       // Verifique se a tarefa já existe na lista
       boolean tarefaExiste = false;
@@ -174,10 +184,14 @@ public class GerenciadorTarefas {
          Utils.imprimirTexto("\nNão há tarefas nessa categoria.");
       }
    }
-   public void adicionarSubtarefa(Tarefa tarefaPai, Tarefa subtarefa) {
-    tarefaPai.adicionarSubtarefa(subtarefa);
-    salvarTarefas();
-   }
+   public void adicionarSubtarefa(Tarefa subtarefa) {
+    subtarefa.setIdTarefaPai(subtarefa.getId()); // Define o ID da tarefa pai na subtarefa
+    if (!subtarefa.getSubtarefas().contains(subtarefa)) {
+        subtarefa.getSubtarefas().add(subtarefa);
+    }
+}
+
+
    public void exibirSubtarefas(Tarefa tarefa) {
       List<Tarefa> subtarefas = tarefa.getSubtarefas();
       if (subtarefas.isEmpty()) {
@@ -196,26 +210,26 @@ public class GerenciadorTarefas {
    }
    
    public List<String> buscarPalavra(String palavra) {
-    List<String> ocorrencias = new ArrayList<>();
-    buscarPalavraRecursivo(palavra, tarefas, ocorrencias);
-    return ocorrencias;
-}
+       List<String> ocorrencias = new ArrayList<>();
+       buscarPalavraRecursivo(palavra, tarefas, ocorrencias);
+       return ocorrencias;
+   }
 
-private void buscarPalavraRecursivo(String palavra, List<Tarefa> tarefas, List<String> ocorrencias) {
-    for (Tarefa tarefa : tarefas) {
-        String titulo = tarefa.getTitulo();
-        String descricao = tarefa.getDescricao();
-        
-        if (titulo.contains(palavra)) {
-            ocorrencias.add("Título da tarefa: " + titulo);
-        }
-        
-        if (descricao.contains(palavra)) {
-            ocorrencias.add("Descrição da tarefa: " + descricao);
-        }
-        
-        List<Tarefa> subtarefas = tarefa.getSubtarefas();
-        buscarPalavraRecursivo(palavra, subtarefas, ocorrencias);
-    }
-  }
+   private void buscarPalavraRecursivo(String palavra, List<Tarefa> tarefas, List<String> ocorrencias) {
+       for (Tarefa tarefa : tarefas) {
+           String titulo = tarefa.getTitulo();
+           String descricao = tarefa.getDescricao();
+           
+           if (titulo.contains(palavra)) {
+               ocorrencias.add("Título da tarefa: " + titulo);
+           }
+           
+           if (descricao.contains(palavra)) {
+               ocorrencias.add("Descrição da tarefa: " + descricao);
+           }
+           
+           List<Tarefa> subtarefas = tarefa.getSubtarefas();
+           buscarPalavraRecursivo(palavra, subtarefas, ocorrencias);
+      }
+   }
 }
