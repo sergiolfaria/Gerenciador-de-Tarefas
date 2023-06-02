@@ -82,27 +82,33 @@ public class GerenciadorTarefas {
    }
 
    public void exibirTarefasPendentes() {
-    Utils.imprimirTexto("\nTarefas pendentes:");
-    List<Tarefa> tarefasPendentes = new ArrayList<>();
-    for (Tarefa tarefa : tarefas) {
-        if (tarefa.getDataConclusao() == null) {
-            tarefasPendentes.add(tarefa);
-            tarefasPendentes.addAll(tarefa.getSubtarefas()); // Adicionar as subtarefas pendentes à lista
-        }
-    }
-    if (tarefasPendentes.isEmpty()) {
-        Utils.imprimirTexto("\nNão há tarefas pendentes.");
-    } else {
-        organizarTarefasPorDataCriacao(tarefasPendentes);
-        for (int i = 0; i < tarefasPendentes.size(); i++) {
-            Tarefa tarefa = tarefasPendentes.get(i);
-            String status = (tarefa.getDataConclusao() == null) ? "Pendente"
-                    : "Concluído em " + tarefa.getDataConclusao().toString();
-            Utils.imprimirTexto("[" + (i + 1) + "] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao()
-                    + "\nStatus: " + status + " (ID: " + tarefa.getId() + ")");
-        }
-    }
-}
+      Utils.imprimirTexto("\nTarefas pendentes:");
+      List<Tarefa> tarefasPendentes = new ArrayList<>();
+      for (Tarefa tarefa : tarefas) {
+          if (tarefa.getDataConclusao() == null) {
+              tarefasPendentes.add(tarefa);
+              tarefasPendentes.addAll(tarefa.getSubtarefas()); // Adicionar as subtarefas pendentes à lista
+          }
+      }
+      if (tarefasPendentes.isEmpty()) {
+          Utils.imprimirTexto("\nNão há tarefas pendentes.");
+      } else {
+          organizarTarefasPorDataCriacao(tarefasPendentes);
+          for (int i = 0; i < tarefasPendentes.size(); i++) {
+              Tarefa tarefa = tarefasPendentes.get(i);
+              String status = (tarefa.getDataConclusao() == null) ? "Pendente"
+                      : "Concluído em " + tarefa.getDataConclusao().toString();
+              if (tarefa.getIdTarefaPai() == null) {
+                  Utils.imprimirTexto("[Tarefa] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao()
+                          + "\nStatus: " + status + " (ID: " + tarefa.getId() + ")");
+              } else {
+                  Utils.imprimirTexto("   [Subtarefa] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao()
+                          + "\n   Status: " + status + " (ID: " + tarefa.getId() + ")");
+              }
+          }
+      }
+  }
+  
 
 
    public Tarefa selecionarTarefa() {
