@@ -185,14 +185,10 @@ public class GerenciadorTarefas {
                   String titulo = campos[0];
                   String descricao = campos[1];
                   LocalDate dataCriacao = LocalDate.parse(campos[2]);
-                  LocalDate dataConclusao = null;
-                  if (!campos[3].equals("null")) {
-                     dataConclusao = LocalDate.parse(campos[3]);
-                  }
+                  LocalDate dataConclusao = campos[3].equals("null") ? null : LocalDate.parse(campos[3]);
                   UUID uuid = UUID.fromString(campos[4]);
                   String categoria = campos[5];
-                  Tarefa tarefa = new Tarefa(titulo, descricao, dataCriacao, dataConclusao, uuid, categoria);
-                  tarefas.add(tarefa);
+                  tarefas.add(new Tarefa(titulo, descricao, dataCriacao, dataConclusao, uuid, categoria));
                }
             }
          } catch (IOException e) {
@@ -202,6 +198,7 @@ public class GerenciadorTarefas {
          Utils.imprimirTexto("\nArquivo de tarefas não encontrado.");
       }
    }
+   
 
    private void carregarSubTarefasDoArquivo(String linha) {
       linha = linha.substring(10); // Remover o prefixo "SUBTAREFA:"
