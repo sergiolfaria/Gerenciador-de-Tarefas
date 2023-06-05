@@ -130,9 +130,30 @@ public class GerenciadorTarefas {
 
    public void exibirTarefasConcluidas() {
       Utils.imprimirTexto("\nTarefas concluídas:");
+      List<Tarefa> tarefasConcluidas = new ArrayList<>();
       for (Tarefa tarefa : tarefas) {
          if (tarefa.getDataConclusao() != null) {
-            exibirTarefaESubtarefas(tarefa, 0);
+            tarefasConcluidas.add(tarefa);
+            tarefasConcluidas.addAll(tarefa.getSubtarefas()); // Adicionar as subtarefas pendentes à lista
+         }
+      }
+      if (tarefasConcluidas.isEmpty()) {
+         Utils.imprimirTexto("\nNão há tarefas concluídas.");
+      } else {
+         organizarTarefasPorDataCriacao(tarefasConcluidas);
+
+         for (int i = 0; i < tarefasConcluidas.size(); i++) {
+            Tarefa tarefa = tarefasConcluidas.get(i);
+            String status = (tarefa.getDataConclusao() != null) ? "Concluído em " + tarefa.getDataConclusao().toString()
+                  : "Pendente";
+
+            if (tarefa.getIdTarefaPai() == null) {
+               Utils.imprimirTexto("[" + (i + 1) + "] [Tarefa] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao()
+                     + "\nStatus: " + status + " (ID: " + tarefa.getId() + ")");
+            } else {
+               Utils.imprimirTexto("   [Subtarefa] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao()
+                     + "\n   Status: " + status + " (ID: " + tarefa.getId() + ")");
+            }
          }
       }
    }
@@ -144,8 +165,10 @@ public class GerenciadorTarefas {
       Utils.imprimirTexto(identacao + "[Tarefa] " + tarefa.getTitulo() + " -> " + tarefa.getDescricao());
       Utils.imprimirTexto(identacao + "Status: " + status + " (ID: " + tarefa.getId() + ")");
       List<Tarefa> subtarefas = tarefa.getSubtarefas();
-      for (Tarefa subtarefa : subtarefas) {
-         exibirTarefaESubtarefas(subtarefa, nivel + 1);
+      if (subtarefas != null) {
+         for (Tarefa subtarefa : subtarefas) {
+            exibirTarefaESubtarefas(subtarefa, nivel + 1);
+         }
       }
    }
 
@@ -179,7 +202,7 @@ public class GerenciadorTarefas {
          Utils.imprimirTexto("\nArquivo de tarefas não encontrado.");
       }
    }
- 
+
    private void carregarSubTarefasDoArquivo(String linha) {
       linha = linha.substring(10); // Remover o prefixo "SUBTAREFA:"
       String[] campos = linha.split(";");
