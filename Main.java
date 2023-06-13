@@ -3,45 +3,57 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+   private static final int OPCAO_ADICIONAR_TAREFA = 1;
+   private static final int OPCAO_CONCLUIR_TAREFA = 2;
+   private static final int OPCAO_EXIBIR_TAREFAS_PENDENTES = 3;
+   private static final int OPCAO_EXIBIR_TAREFAS_CONCLUIDAS = 4;
+   private static final int OPCAO_FILTRAR_TAREFAS_POR_CATEGORIA = 5;
+   private static final int OPCAO_BUSCAR_PALAVRA = 6;
+   private static final int OPCAO_SAIR = 0;
+
+   
+   public static void main(String[] args) {
+      Scanner scanner = new Scanner(System.in);
         GerenciadorArquivos arquivo = new GerenciadorArquivos();
         Menu menu = new Menu();
         String nomeArquivo = "";
 
-        // Solicita o nome do arquivo de dados ao usuário
         arquivo.criarArquivo();
         nomeArquivo = arquivo.getNomeArquivo();
 
-        // Cria o gerenciador de tarefas a partir do nome do arquivo fornecido
         GerenciadorTarefas gerenciador = new GerenciadorTarefas(nomeArquivo);
 
         int opcaoTarefa = 1;
-        while (opcaoTarefa != 0) {
-            menu.exibirMenuTarefas(); // Apresenta as opções de operação disponíveis
-            opcaoTarefa = scanner.nextInt(); // Lê a opção escolhida pelo usuário
-            scanner.nextLine(); // Consome a quebra de linha
+        String categoria = null;
+        while (opcaoTarefa != OPCAO_SAIR) {
+            menu.exibirMenuTarefas();
+            while (!scanner.hasNextInt()) {
+               scanner.next();
+               System.out.println("Opção inválida. Por favor, insira novamente:");
+            }
+            opcaoTarefa = scanner.nextInt();
+            scanner.nextLine();
 
-            if (opcaoTarefa == 1) {
-                // Solicita o título e a descrição da tarefa ao usuário
-                String titulo = Utils.lerTexto("\nDigite o título da tarefa:");
-                String descricao = Utils.lerTexto("Digite a descrição da tarefa:");
+            switch (opcaoTarefa){
+            
+               case OPCAO_ADICIONAR_TAREFA:
+                  
+                  String titulo = Utils.lerTexto("\nDigite o título da tarefa:");
+                  String descricao = Utils.lerTexto("Digite a descrição da tarefa:");
 
-                String respostaCategoria = Utils.lerTexto("Deseja adicionar uma categoria à tarefa? (S/N)");
-                String categoria = null;
+                  String respostaCategoria = Utils.lerTexto("Deseja adicionar uma categoria à tarefa? (S/N)");
 
-                if (respostaCategoria.equalsIgnoreCase("S")) {
-                    categoria = Utils.lerTexto("Digite a categoria da tarefa:");
-                }
+                  if (respostaCategoria.equalsIgnoreCase("S")) {
+                     categoria = Utils.lerTexto("Digite a categoria da tarefa:");
+                  }
 
-                // Cria uma nova tarefa com os dados fornecidos e a adiciona ao gerenciador
-                Tarefa tarefa = new Tarefa(titulo, descricao);
-                tarefa.setCategoria(categoria);
+                  Tarefa tarefa = new Tarefa(titulo, descricao);
+                  tarefa.setCategoria(categoria);
 
-                String respostaSubtarefa = Utils.lerTexto("Deseja adicionar uma subtarefa? (S/N)");
-                if (respostaSubtarefa.equalsIgnoreCase("S")) {
-                    boolean adicionarSubtarefa = true;
-                    while (adicionarSubtarefa) {
+                  String respostaSubtarefa = Utils.lerTexto("Deseja adicionar uma subtarefa? (S/N)");
+                  if (respostaSubtarefa.equalsIgnoreCase("S")) {
+                     boolean adicionarSubtarefa = true;
+                     while (adicionarSubtarefa) {
                         String tituloSubtarefa = Utils.lerTexto("Digite o título da subtarefa:");
                         String descricaoSubtarefa = Utils.lerTexto("Digite a descrição da subtarefa:");
 
@@ -52,53 +64,62 @@ public class Main {
                         if (!respostaContinuar.equalsIgnoreCase("S")) {
                             adicionarSubtarefa = false;
                         }
-                    }
-                }
-
-                gerenciador.adicionarTarefa(tarefa);
-
-                // Informa ao usuário que a tarefa foi adicionada com sucesso
-                Utils.imprimirTexto("\nTarefa adicionada com sucesso!");
-            } else if (opcaoTarefa == 2) {
-                Tarefa tarefaSelecionada = gerenciador.selecionarTarefa();
-                if (tarefaSelecionada != null) {
-                    gerenciador.concluirTarefa(tarefaSelecionada);
-                    Utils.imprimirTexto("\nTarefa concluída com sucesso.");
-                } else {
-                    Utils.imprimirTexto("\nNenhuma tarefa selecionada.");
-                }
-            } else if (opcaoTarefa == 3) {
-                // Exibe as tarefas pendentes ao usuário
-                gerenciador.exibirTarefasPendentes();
-            } else if (opcaoTarefa == 4) {
-                // Exibe as tarefas concluídas ao usuário
-                gerenciador.exibirTarefasConcluidas();
-            } else if (opcaoTarefa == 5) {
-                // Solicita a categoria do usuário
-                String categoria = Utils.lerTexto("Digite a categoria:");
-                // Filtra as tarefas pela categoria fornecida
-                gerenciador.filtrarTarefasPorCategoria(categoria);
-            }else if (opcaoTarefa == 6) {
-                // Solicita a palavra a ser buscada
-                String palavra = Utils.lerTexto("Digite a palavra a ser buscada:");
-                // Busca a palavra nos arquivos TXT
-                List<String> ocorrencias = gerenciador.buscarPalavra(palavra);
-
-                // Exibe as ocorrências encontradas
-                if (ocorrencias.isEmpty()) {
-                    Utils.imprimirTexto("\nA palavra não foi encontrada nos arquivos TXT.");
-                } else {
-                    Utils.imprimirTexto("\nOcorrências encontradas:");
-                    for (String ocorrencia : ocorrencias) {
+                     }
+                  }
+                  gerenciador.adicionarTarefa(tarefa);
+                  Utils.imprimirTexto("\nTarefa adicionada com sucesso!");
+                  break;
+               
+               case OPCAO_CONCLUIR_TAREFA:
+                  
+                  Tarefa tarefaSelecionada = gerenciador.selecionarTarefa();
+                  if (tarefaSelecionada != null) {
+                     gerenciador.concluirTarefa(tarefaSelecionada);
+                     Utils.imprimirTexto("\nTarefa concluída com sucesso.");
+                  } else {
+                     Utils.imprimirTexto("\nNenhuma tarefa selecionada.");
+                  }
+                  break; 
+               
+               case OPCAO_EXIBIR_TAREFAS_PENDENTES:
+                
+                  gerenciador.exibirTarefasPendentes();
+                  break;
+               
+               case OPCAO_EXIBIR_TAREFAS_CONCLUIDAS:
+                  
+                  gerenciador.exibirTarefasConcluidas();
+                  break;
+                  
+               case OPCAO_FILTRAR_TAREFAS_POR_CATEGORIA:
+                  
+                  categoria = Utils.lerTexto("Digite a categoria:");
+                  gerenciador.filtrarTarefasPorCategoria(categoria);
+                  break;
+            
+               case OPCAO_BUSCAR_PALAVRA:
+                  
+                  String palavra = Utils.lerTexto("Digite a palavra a ser buscada:");
+                  List<String> ocorrencias = gerenciador.buscarPalavra(palavra);
+                  if (ocorrencias.isEmpty()) {
+                     Utils.imprimirTexto("\nA palavra não foi encontrada nos arquivos TXT.");
+                  } else {
+                     Utils.imprimirTexto("\nOcorrências encontradas:");
+                     for (String ocorrencia : ocorrencias) {
                         Utils.imprimirTexto(ocorrencia);
-                    }
-                }
-            }else if (opcaoTarefa == 0) {
-                // Encerra o programa
-                Utils.imprimirTexto("\nSaindo...");
-            }else {
-                // Informa ao usuário que a opção é inválida
-                Utils.imprimirTexto("\nOpção inválida.");
+                     }
+                  }
+                  break;
+               
+               case OPCAO_SAIR:
+                  
+                  Utils.imprimirTexto("\nSaindo...");
+                  break;
+            
+               default:
+                
+                  Utils.imprimirTexto("\nOpção inválida.");
+                  break;
             }
         }
     }

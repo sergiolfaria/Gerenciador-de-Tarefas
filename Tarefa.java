@@ -73,9 +73,13 @@ public class Tarefa {
         status = dataConclusao == null ? "Pendente" : "Concluido"; // Atualiza o status com base na nova dataConclusao
     }
 
-    public String getStatus() {
-        return status;
-    }
+    public String getStatus(Tarefa tarefa) {
+      if (tarefa.getDataConclusao() != null) {
+         return "Concluída";
+      } else {
+         return "Pendente";
+      }
+   }
 
     public void adicionarSubtarefa(Tarefa subtarefa) {
         subtarefa.setIdTarefaPai(this.uuid); // Define o ID da tarefa pai na subtarefa
@@ -104,7 +108,7 @@ public class Tarefa {
         if (dataConclusao != null) {
             str += "Data de conclusão: " + dataConclusao + "\n";
         }
-        str += "Status: " + status + "\n"; // Adiciona o status à representação em string
+        str += "Status: " + status + "\n";
         str += "UUID: " + uuid + "\n";
         return str;
     }
