@@ -29,19 +29,19 @@ public class GerenciadorArquivos {
       File arquivo = arquivoPath.toFile();
       try {
          if (arquivo.createNewFile()) {
-            Utils.imprimirTexto("\nArquivo criado com sucesso.");
+            Utils.imprimirTexto("\nUsuario criado com sucesso.");
             adicionarSenha();
          } else {
-            Utils.imprimirTexto("\nO arquivo já existe.");
+            Utils.imprimirTexto("\nO Usuario já existe.");
             validarSenha(nomeArquivo);
          }
       } catch (IOException e) {
-         Utils.imprimirTexto("\nErro ao criar arquivo.");
+         Utils.imprimirTexto("\nErro ao criar Usuario.");
       }
    }
 
    public void adicionarSenha() {
-      Utils.imprimirTexto("\nDigite a senha para o arquivo:");
+      Utils.imprimirTexto("\nDigite a senha para o Usuario:");
       String senha = scanner.nextLine();
       arquivoSenhaMap.put(nomeArquivo, senha);
 
@@ -61,7 +61,7 @@ public class GerenciadorArquivos {
          writer.write(senha + "\n");
          Utils.imprimirTexto("\nSenha adicionada com sucesso.");
       } catch (IOException e) {
-         Utils.imprimirTexto("\nErro ao adicionar senha ao arquivo.");
+         Utils.imprimirTexto("\nErro ao adicionar senha ao Usuario.");
       }
    }
 
@@ -70,7 +70,7 @@ public class GerenciadorArquivos {
       carregarSenhasDoArquivo();
 
       do {
-         Utils.imprimirTexto("\nDigite a senha para acessar o arquivo:");
+         Utils.imprimirTexto("\nDigite a senha para acessar o Usuario:");
          String senha = scanner.nextLine();
 
          String senhaSalva = arquivoSenhaMap.get(nomeArquivo);
@@ -104,36 +104,7 @@ public class GerenciadorArquivos {
       }
    }
 
-   public void selecionarArquivo() {
-      File diretorio = new File("dados");
-      File[] arquivos = diretorio.listFiles((dir, name) -> name.endsWith("_senha.txt"));
-   
-      if (arquivos != null && arquivos.length > 0) {
-         Utils.imprimirTexto("\nArquivos disponíveis:");
-      
-         Set<String> nomesArquivos = obterNomesArquivos(arquivos);
-         nomesArquivos.forEach(Utils::imprimirTexto);
-      
-         boolean arquivoSelecionado = false;
-         do {
-            Utils.imprimirTexto("\nDigite o nome do arquivo desejado:");
-            String nomeArquivo = scanner.nextLine();
-      
-            if (nomesArquivos.contains(nomeArquivo)) {
-               arquivoSelecionado = true;
-               validarSenha(nomeArquivo);
-            } else {
-               Utils.imprimirTexto("\nArquivo não encontrado. Tente novamente.");
-            }
-         } while (!arquivoSelecionado);
-      } else {
-         Utils.imprimirTexto("\nNenhum arquivo disponível.");
-      }
-   }
 
-   private Set<String> obterNomesArquivos(File[] arquivos) {
-      return Arrays.stream(arquivos).map(arquivo -> arquivo.getName().replace("_senha.txt", "")).collect(Collectors.toSet());
-   }
 
 }
 
